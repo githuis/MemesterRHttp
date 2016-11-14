@@ -1,13 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using RHttpServer;
 using RHttpServer.Plugins.External;
 using RHttpServer.Response;
@@ -19,23 +15,94 @@ namespace MemesterRHttp
         static void Main(string[] args)
         {
             var server = new HttpServer(5000, 3, "./public") { CachePublicFiles = true };
-            var mongo = new SimpleMongoDBConnection("mongodb://localhost");
-            server.RegisterPlugin<SimpleMongoDBConnection, SimpleMongoDBConnection>(mongo);
-            var db = mongo.GetDatabase("memeste").GetCollection<BsonDocument>("");
+            var db = new SimpleSQLiteDatatase("memes.db");
+            var dict = LoadMemes(db.GetTable<Meme>());
 
-            server.Post("/vote/:memeId", (req, res) =>
+            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(2));
+
+            var rand = new Random();
+
+            server.Get("/", (req, res) =>
             {
-                var memeId = req.Params["memeId"];
-                var vote = req.ParseBody<MemeVote>();
-                if (string.IsNullOrEmpty(memeId) || vote == null || InvalidVote(vote))
+                var m = rand.Next(0, dict.Count);
+                var meme = dict.ElementAt(m).Value;
+                res.Redirect("/meme/" + meme.OrgId);
+            });
+
+            server.Get("/instameme", (req, res) =>
+            {
+                var m = rand.Next(0, dict.Count);
+                var meme = dict.ElementAt(m).Value;
+                res.Redirect("/" + meme.Path);
+            });
+
+            server.Get("/meme/:meme", (req, res) =>
+            {
+                var memeid = req.Params["meme"];
+                if (string.IsNullOrWhiteSpace(memeid))
+                {
+                    res.Redirect("/404");
+                    return;
+                }
+                Meme meme;
+                if (!dict.TryGetValue(memeid, out meme))
+                {
+                    res.Redirect("/404");
+                    return;
+                }
+                var rp = new RenderParams
+                {
+                    {"title", meme.Title},
+                    {"score", meme.Score},
+                    {"path", meme.Path}
+                };
+                res.RenderPage("/pages/singlememe.ecs", rp);
+            });
+
+            server.Post("/meme/:meme/vote", (req, res) =>
+            {
+                var u = req.Queries["user"];
+                var p = req.Queries["pass"];
+                var m = req.Params["meme"];
+                var v = req.Queries["val"];
+                int val;
+
+                if (string.IsNullOrWhiteSpace(u) || string.IsNullOrWhiteSpace(m) || string.IsNullOrWhiteSpace(v) || string.IsNullOrWhiteSpace(p))
                 {
                     res.SendString("no");
                     return;
                 }
 
+                if (!int.TryParse(v, out val) || val < -1 || val > 1)
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+
+                Meme meme;
+                if (!dict.TryGetValue(m, out meme))
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+                var user = db.Get<User>(u);
+                if (user == null || user.PassHash != p)
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+                int cv;
+                meme.Vote(user.Votes.TryGetValue(m, out cv) ? CalcVote(cv, val) : val);
+                user.Votes[m] = val;
+                db.Update(meme);
+                db.Update(user);
+                res.SendString("ok");
             });
 
-            server.Get("/multimeme", async (req, res) =>
+            server.Get("/multimeme", (req, res) =>
             {
                 var size = req.Queries["size"];
                 if (string.IsNullOrEmpty(size) || !Regex.IsMatch(size, "[0-9]+x[0-9]+", RegexOptions.Compiled)) size = "3x3";
@@ -44,18 +111,17 @@ namespace MemesterRHttp
                 var w = int.Parse(split[1]);
                 if (h > 4) h = 4;
                 if (w > 5) w = 5;
-                var tot = h*w;
-                var limit = tot*3;
-                FindOptions<BsonDocument> options = new FindOptions<BsonDocument> { Limit = limit };
-                await db.Find(new BsonDocument()).ForEachAsync(d => Console.WriteLine(d));
-                var list = new List<BsonDocument>();
+                var tot = h * w;
+                var limit = tot * 3;
+                var l = dict.Count;
+                if (limit > l) limit = l;
                 var r = new Random();
-                int c = 0;
-                while (list.Count < tot && ++c < limit)
+                var list = new List<Meme>();
+                for (int i = 0; i < limit; i++)
                 {
-                    if (r.Next(0, 10) > 4) list.Add(memes.Current.FirstOrDefault());
-                    memes.MoveNext();
+                    list.Add(dict.ElementAt(r.Next(0, l)).Value);
                 }
+
                 res.RenderPage("./pages/multimeme.ecs", new RenderParams
                 {
                     {"h", h},
@@ -63,74 +129,83 @@ namespace MemesterRHttp
                     {"m", list}
                 });
             });
-            Crawler.StartCrawler();
-        }
-
-        private static bool InvalidVote(MemeVote vote)
-        {
-            if (string.IsNullOrWhiteSpace(vote.VCommand) || vote.VCommand != "u" || vote.VCommand != "d") return false;
-            if (string.IsNullOrWhiteSpace(vote.Voter)) return false;
-            if (vote.Voter[3] < 51 || vote.Voter[3] > 54) return false;
-            if (vote.Voter[7] < 105 || vote.Voter[7] > 108) return false;
-            if (vote.Voter[9] < 75 || vote.Voter[9] > 77) return false;
-            return true;
-        }
-    }
-
-    class MemeVote
-    {
-        public string Voter { get; set; }
-        public string VCommand { get; set; }
-    }
-
-    class Crawler
-    {
-        public static void StartCrawler()
-        {
-            var memes = Crawl();
-            Parallel.ForEach(memes, Downloader.DownloadMeme);
-        }
-
-        public static IEnumerable<CMeme> Crawl()
-        {
-            var list = new List<CMeme>();
-            var wc = new WebClient();
-            var html = wc.DownloadString("http://boards.4chan.org/wsg/");
-            var doc = new HtmlAgilityPack.HtmlDocument();
-            doc.LoadHtml(html);
-            var nodes = doc.DocumentNode.SelectNodes("//div[@class='fileText']/a");
-            foreach (var node in nodes)
+            
+            server.Get("/register", (req, res) =>
             {
-                string id = node.InnerText.Replace(".webm", "").Replace(".gif", "");
-                string re = node.Attributes["href"].Value;
-                if (!re.StartsWith("http")) re = "http:" + re;
-                list.Add(new CMeme
+                res.RenderPage("/pages/registerpage.ecs", null);
+            });
+
+            server.Post("/register", (req, res) =>
+            {
+                var data = req.GetBodyPostFormData();
+                if (!data.ContainsKey("username") || !data.ContainsKey("passhash"))
                 {
-                    Title = id,
-                    Url = re
-                });
-            }
+                    res.SendString("no");
+                    return;
+                }
+                var user = db.Get<User>(data["username"]);
+                if (user != null)
+                {
+                    res.SendString("no");
+                    return;
+                }
+                user = new User
+                {
+                    Username = data["username"],
+                    PassHash = data["passhash"]
+                };
+                db.Insert(user);
+                res.SendString("ok");
+            });
 
-            return list;
+            crawler.Start();
         }
-    }
 
-    class Downloader
-    {
-        private const string MemePath = "./public/memes";
-        public static void DownloadMeme(CMeme meme)
+        private static ConcurrentDictionary<string, Meme> LoadMemes(IEnumerable<Meme> memes)
         {
-            var filename = meme.Url.Substring(meme.Url.LastIndexOf("/") + 1);
-            var filepath = Path.Combine(MemePath, filename);
-            if (File.Exists(filepath)) return;
-            var wc = new WebClient();
-            wc.DownloadFile(new Uri(meme.Url), filepath);
+            var retVal = new ConcurrentDictionary<string, Meme>();
+            foreach (var meme in memes)
+            {
+                retVal.TryAdd(meme.OrgId, meme);
+            }
+            Console.WriteLine("Memes loaded!");
+            return retVal;
         }
-    }
-
-    class CMeme
-    {
-        public string Title { get; set; }
-        public string Url { get; set; }
+        
+        private static int CalcVote(int cv, int nv)
+        {
+            switch (cv)
+            {
+                case -1:
+                    switch (nv)
+                    {
+                        case 0:
+                            return 1;
+                        case 1:
+                            return 2;
+                    }
+                    break;
+                case 0:
+                    switch (nv)
+                    {
+                        case -1:
+                            return -1;
+                        case 1:
+                            return 1;
+                    }
+                    break;
+                case 1:
+                    switch (nv)
+                    {
+                        case 0:
+                            return -1;
+                        case -1:
+                            return -2;
+                    }
+                    break;
+            }
+            return 0;
+        }
+        
     }
 }
