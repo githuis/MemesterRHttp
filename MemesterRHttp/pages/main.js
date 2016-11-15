@@ -21,9 +21,8 @@
     loadFullscreenState();
 
     progressBar.on('input change', function() {
-        console.log((video.duration / 100) * progressBar.val());
-        video.currentTime = (video.duration / 100) * progressBar.val();
-        console.log(progressBar.val());
+        var prog = (video.duration / 100) * progressBar.val();
+        video.currentTime = prog;
     });
 
 
@@ -43,27 +42,21 @@
 
     function toggleFullscreen() {
         var cState = sessionStorage.getItem("fs");
-        if (cState == null || cState == "null"){
+        if (cState == null || cState == "null" || cState == "mini"){
             cState = "full";
+            $("#content").removeClass("videoMinimized");
+            $("#content").addClass("videoFullscreen");
+            $('#pageHeader').hide();
         }
         else if (cState == "full"){
             cState = "mini";
             $("#content").removeClass("videoFullscreen");
             $("#content").addClass("videoMinimized");
             $('#pageHeader').show();
-
-        }
-        else if (cState == "mini"){
-            cState = "full";
-            $("#content").removeClass("videoMinimized");
-            $("#content").addClass("videoFullscreen");
-            $('#pageHeader').hide();
         }
         sessionStorage.setItem("fs", cState);
     }
 
-//    setInterval(function () {
-//        if(progressBar.is(":focus"))
-//            progressBar.val(video.duration/100*video.currentTime);
-//        console.log(video.duration/100*video.currentTime);
-//    },1000);
+    setInterval(function () {
+        progressBar.val((video.currentTime*100)/video.duration);
+    },500);
