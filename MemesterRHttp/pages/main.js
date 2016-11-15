@@ -9,6 +9,8 @@
     var progresschange = false;
 
     function loadFullscreenState(){
+
+
         var cState = sessionStorage.getItem("fs");
         if (cState == null || cState == "null" || cState == "mini"){
             $("#content").addClass("videoMinimized");
@@ -19,6 +21,7 @@
         }
     }
     loadFullscreenState();
+
 
     progressBar.on('input change', function() {
         var prog = (video.duration / 100) * progressBar.val();
