@@ -3,30 +3,59 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="icons.css">
+    <!--<link rel="stylesheet" href="icons.css">-->
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>memester test</title>
+
 </head>
 <body>
-    <header id="pageHeader">Memester</header>
-        <div id="content" >
-            <header id="contentHeader">
-                <%title%>
-            </header>
-            <video src="test.webm" id="contentVideo"></video>
-            <footer>
-                <div id="videoControls">
-                    <div id="playButton" class="play" onclick="playPauseToggle()"></div>
-                    <input type="range" id="progressBar">
-                    <div class="fullscreen" onclick="toggleFullscreen()"></div>
-                </div>
-                <div class="slider"></div>
+    <div id="container">
+        <header>Memester</header>
 
+        <main>
+            <header>Title</header>
+
+            <div>
+                <video src="https://giant.gfycat.com/ThisGrippingGalapagosalbatross.webm"></video>
+            </div>
+
+            <footer class="player-controls">
+                <button class="play fa fa-play"></button>
+                <input type="range" class="progress">
+                <button class="fullscreen fa fa-arrows-alt"></button>
             </footer>
-        </div>
+        </main>
+    </div>
+
+
+    <!--<header>Memester</header>-->
+
+    <!--<div id="content">-->
+    <!--&lt;!&ndash;<header>-->
+    <!--<%title%>-->
+    <!--</header>&ndash;&gt;-->
+
+
+    <!--<footer>-->
+    <!--<button class="fullscreen">FS</button>-->
+    <!--</footer>-->
+
+    <!--&lt;!&ndash;<footer>-->
+    <!--<div id="videoControls">-->
+    <!--<div id="playButton" class="play" onclick="playPauseToggle()"></div>-->
+    <!--<input type="range" id="progressBar">-->
+    <!--<div class="fullscreen" onclick="toggleFullscreen()"></div>-->
+    <!--</div>-->
+    <!--<div class="slider"></div>-->
+    <!--</footer>&ndash;&gt;-->
+
+    <!--</div>-->
+    <script>
+
+    </script>
     <script src="main.js"></script>
 </body>
 </html>
