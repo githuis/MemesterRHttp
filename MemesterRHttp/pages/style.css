@@ -4,6 +4,8 @@ html {
 
 body {
     height: 100%;
+    background-color: #1d1d1d;
+    color: #fcfcff;
 }
 
 #container {
@@ -11,19 +13,22 @@ body {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+
 }
 
 #container > header {
     flex: 0 0 60px;
     width: 100%;
-    margin-bottom: 100px;
-    background-color: darkgray;
+    height: 42px;
+    background-color: #2e2e2e;
+    margin-bottom: 42px;
 }
 
 #container > main {
     flex: 1 1 auto;
     width: 100%;
     max-width: 960px;
+
 }
 
 #container > main > div > video {
@@ -35,7 +40,12 @@ body {
 
 #container > main > footer {
     flex: 0 0 30px;
-    background-color: green;
+    height: 34px;
+    background-color: #2e2e2e;
+    line-height: 34px;
+    webkit-box-shadow: 0px 5px 9px 0px rgba(0,0,0,0.14);
+    -moz-box-shadow: 0px 5px 9px 0px rgba(0,0,0,0.14);
+    box-shadow: 0px 5px 9px 0px rgba(0,0,0,0.14);
 }
 
 #container.fullscreen > header {
