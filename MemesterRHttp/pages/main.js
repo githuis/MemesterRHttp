@@ -28,7 +28,7 @@ $progress.change(function (e) {
     var progress = (video.duration / 100) * $(this).val();
     video.currentTime = progress;
 });
-
+ 
 $video.on('timeupdate', function () {
     $progress.val((video.currentTime * 100) / video.duration)
 });
