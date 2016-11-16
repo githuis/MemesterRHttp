@@ -24,6 +24,7 @@ $container.find('.fullscreen').click(function () {
 var $progress = $('.progress');
 
 $progress.change(function (e) {
+    console.log("asd");
     var progress = (video.duration / 100) * $(this).val();
     video.currentTime = progress;
 });
