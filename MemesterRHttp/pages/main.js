@@ -43,3 +43,11 @@ $video.on('ended', function () {
     $playButton.toggleClass('fa-pause');
 });
 
+
+
+// Old but useful stuff
+
+if (sessionStorage.getItem("fs") == "full"){
+    $container.toggleClass('fullscreen');
+}
+
