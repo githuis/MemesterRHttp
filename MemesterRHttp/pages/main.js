@@ -9,7 +9,7 @@ var $progress = $('.progress');
 
 
 $progress.val(0);
-$volumeSlider.val(video.volume);
+$volumeSlider.val(video.volume * 100);
 var changing = false;
 
 
@@ -19,6 +19,14 @@ $(".play").click(function () {
     } else {
         video.pause()
     }
+    $playButton.toggleClass('fa-pause');
+});
+
+$video.on('play', function () {
+    $playButton.toggleClass('fa-pause');
+});
+
+$video.on('pause', function () {
     $playButton.toggleClass('fa-pause');
 });
 
@@ -65,6 +73,8 @@ $video.on('timeupdate', function () {
 
 $video.on('ended', function () {
     $playButton.toggleClass('fa-pause');
+    if (sessionStorage.getItem("ap") == "true")
+        window.location = "memester.club"
 });
 
 if (sessionStorage.getItem("fs") == "full"){
