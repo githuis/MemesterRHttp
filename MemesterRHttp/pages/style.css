@@ -93,10 +93,21 @@ body {
     height: 30px;
 }
 
+.player-controls > .volume {
+    height: 30px;
+    width: 80px;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
 .player-controls > .fullscreen {
     flex: 0 0 30px;
     height: 30px;
     background-color: transparent;
     border: none;
     outline: none;
+}
+
+.slider{
+    float: right;
 }
