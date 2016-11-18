@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using RHttpServer;
 using RHttpServer.Plugins.External;
 using RHttpServer.Response;
@@ -12,6 +14,8 @@ namespace MemesterRHttp
 {
     class Program
     {
+        private static readonly object _reportLock = new object();
+
         static void Main(string[] args)
         {
             var server = new HttpServer(5000, 3, "./public") { CachePublicFiles = true };
@@ -100,6 +104,66 @@ namespace MemesterRHttp
                 db.Update(meme);
                 db.Update(user);
                 res.SendString("ok");
+            });
+
+            server.Post("/meme/:meme/report", (req, res) =>
+            {
+                var m = req.Params["meme"];
+                var rn = req.Queries["rn"];
+                var reason = req.Queries["reason"];
+                var uid = req.Queries["uid"];
+
+                if (string.IsNullOrWhiteSpace(rn) || (rn == "4" && string.IsNullOrWhiteSpace(reason)))
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(uid)) uid = "$ANON";
+
+                int rval;
+                if (!int.TryParse(rn, out rval) || rval < 0 || rval > 4)
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+
+                Meme meme;
+                if (!dict.TryGetValue(m, out meme))
+                {
+                    res.SendString("no");
+                    return;
+                }
+                
+                // will do for now
+                lock (_reportLock)
+                {
+                    File.AppendAllText("reported.txt", $"{m}\t{uid}{rn}\t{reason}\n");
+                }
+                res.SendString("ok");
+            });
+
+
+            server.Post("/meme/:meme/remove", async (req, res) =>
+            {
+                var pass = req.Queries["pass"];
+                var m = req.Params["meme"];
+                var pwd = File.ReadAllText("rmpwd");
+
+                Meme meme;
+                if (pwd != pass || !dict.TryGetValue(m, out meme))
+                {
+                    var r = rand.Next(750, 3000);
+                    await Task.Delay(r);
+                    res.SendString("no");
+                    return;
+                }
+                await Task.Delay(500);
+                db.Delete<Meme>(meme.OrgId);
+                dict.TryRemove(m, out meme);
+                File.Delete(meme.Path);
+                File.Delete(meme.Thumb);
             });
 
             server.Get("/multimeme", (req, res) =>
@@ -207,5 +271,13 @@ namespace MemesterRHttp
             return 0;
         }
         
+    }
+
+    enum ReportReason
+    {
+        NSFW,
+        NotFunny,
+        Abuse,
+        Other
     }
 }

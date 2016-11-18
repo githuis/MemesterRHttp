@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Frapper;
 using RHttpServer.Plugins.External;
 
 namespace MemesterRHttp
@@ -14,6 +15,7 @@ namespace MemesterRHttp
         private readonly ConcurrentDictionary<string, Meme> _dict;
         private readonly SimpleSQLiteDatatase _db;
         private readonly TimeSpan _interval;
+        private static readonly FFMPEG FFMPEG = new FFMPEG("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
 
         public Crawler(ConcurrentDictionary<string, Meme> dict, SimpleSQLiteDatatase db, TimeSpan interval)
         {
@@ -74,12 +76,19 @@ namespace MemesterRHttp
             var filepath = Path.Combine(MemePath, filename);
             var wc = new WebClient();
             wc.DownloadFile(new Uri(meme.Url), filepath);
-            return new Meme
+            var m = new Meme
             {
                 OrgId = Path.GetFileNameWithoutExtension(filename),
                 Ext = Path.GetExtension(filename),
                 Title = meme.Title
             };
+            CreateThumb(m);
+            return m;
+        }
+
+        private static void CreateThumb(Meme meme)
+        {
+            var res = FFMPEG.RunCommand($"-i {meme.Path} -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
         }
     }
 }
