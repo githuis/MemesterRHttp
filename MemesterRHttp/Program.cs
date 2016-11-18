@@ -144,7 +144,6 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-
             server.Post("/meme/:meme/remove", async (req, res) =>
             {
                 var pass = req.Queries["pass"];
@@ -193,7 +192,27 @@ namespace MemesterRHttp
                     {"m", list}
                 });
             });
-            
+
+            server.Post("/login", (req, res) =>
+            {
+                var login = req.GetBodyPostFormData();
+                var uid = login["uid"];
+                var pwd = login["pwd"];
+                if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(pwd))
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+                var user = db.FindOne<User>(u => u.Username == uid);
+                if (user == null || user.PassHash != pwd)
+                {
+                    res.SendString("no");
+                    return;
+                }
+                res.SendString("ok");
+            });
+
             server.Get("/register", (req, res) =>
             {
                 res.RenderPage("/pages/registerpage.ecs", null);
@@ -223,6 +242,7 @@ namespace MemesterRHttp
             });
 
             crawler.Start();
+            
         }
 
         private static ConcurrentDictionary<string, Meme> LoadMemes(IEnumerable<Meme> memes)

@@ -79,7 +79,7 @@ namespace MemesterRHttp
             var m = new Meme
             {
                 OrgId = Path.GetFileNameWithoutExtension(filename),
-                Ext = Path.GetExtension(filename),
+                Ext = Path.GetExtension(filename),  
                 Title = meme.Title
             };
             CreateThumb(m);
