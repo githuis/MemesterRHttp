@@ -6,6 +6,7 @@ var $playButton = $('.play');
 var $fullscreen = $('.fullscreen');
 var $volumeSlider = $('.volume');
 var $progress = $('.progress');
+var $volIcon = $('.player-controls > i');
 
 
 $progress.val(0);
@@ -54,32 +55,36 @@ $container.find('.fullscreen').click(function () {
 
 });
 
-$progress.change(function (e) {
+$progress.on('input', function (e) {
     changing = true;
     var progress = (video.duration / 100) * $(this).val();
     video.currentTime = progress;
     changing = false;
 });
 
-$volumeSlider.change(function (e) {
-    video.volume = $(this).val() / 100;
-    sessionStorage.setItem("vol",video.volume);
+$volumeSlider.on('input', function (e) {
+    var val = $(this).val();
+    video.volume = val / 100;
+    setVolIcon(val);
+    sessionStorage.setItem("vol", val);
 });
 
 video.onvolumechange = function () {
-    $volumeSlider.val(video.volume * 100);
+    var v = video.volume * 100;
+    $volumeSlider.val(v);
+    setVolIcon(v);
 };
 
 $video.on('timeupdate', function () {
     if(changing == false)
-    $progress.val((video.currentTime * 100) / video.duration)
+        $progress.val((video.currentTime * 100) / video.duration)
 });
 
 $video.on('ended', function () {
     if($playButton.hasClass('fa-pause'))
         $playButton.toggleClass('fa-pause');
     if (sessionStorage.getItem("ap") == "true")
-        window.location = "memester.club"
+        window.location = "http://memester.club"
 });
 
 if (sessionStorage.getItem("fs") == "full"){
@@ -88,4 +93,34 @@ if (sessionStorage.getItem("fs") == "full"){
 
 if (sessionStorage.getItem("ap") == "true"){
     $('.slider').toggleClass('active');
+}
+
+var vol = sessionStorage.getItem("vol");
+if (vol != null && vol != "null"){
+    var v = parseInt(vol);
+    $volumeSlider.val(v);
+    video.volume = v / 100;
+    setVolIcon(v);
+}
+
+function setVolIcon(vol) {
+    if (vol == 0){
+        if (!$volIcon.hasClass("fa-volume-off"))
+            $volIcon.toggleClass("fa-volume-off");
+        $volIcon.removeClass("fa-volume-down");
+        $volIcon.removeClass("fa-volume-up");
+    }
+
+    else if (vol < 50){
+        if (!$volIcon.hasClass("fa-volume-down"))
+            $volIcon.toggleClass("fa-volume-down");
+        $volIcon.removeClass("fa-volume-off");
+        $volIcon.removeClass("fa-volume-up");
+    }
+    else {
+        if (!$volIcon.hasClass("fa-volume-up"))
+            $volIcon.toggleClass("fa-volume-up");
+        $volIcon.removeClass("fa-volume-down");
+        $volIcon.removeClass("fa-volume-off");
+    }
 }

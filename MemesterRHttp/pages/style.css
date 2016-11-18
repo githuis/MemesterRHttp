@@ -176,10 +176,11 @@ main header button {
     display: block;
 }
 
-.fa-volume-up{
+.player-controls > i {
     margin-left: 15px;
+    margin-right: 5px;
     margin-top: 7px;
-
+    min-width: 10px;
 }
 
 
