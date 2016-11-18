@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One|Open+Sans+Condensed:300|Raleway:200" rel="stylesheet">
     <title>Memester.Club</title>
 
     <meta property="og:title" content="<%title%> - Memester" />
@@ -18,24 +19,34 @@
 </head>
 <body>
     <div id="container">
-        <header>Memester</header>
+        <header>
+            <div>Memester.club
+                <div class="dropdown"></div>
+            </div>
+        </header>
 
         <main>
-            <header><%title%>
+            <header>This is a webm about :^)
+                <button class="arrow1 right" aria-hidden="true"></button>
                 <div class="slider"></div>
+                <button class="arrow1 left" aria-hidden="true"></button>
             </header>
 
             <div>
-                <video src="test.webm">
-                    It is 2016 and your browser still doesn't support webm
+                <video src="test.webm" autoplay>
+                    It is 2016 and your browser's still not down with a litle webm
                 </video>
             </div>
 
             <footer class="player-controls">
                 <button class="play fa fa-play"></button>
                 <input type="range" class="progress">
+                <i class="fa fa-volume-up" aria-hidden="true"></i>
                 <input type="range" class="volume">
                 <button class="fullscreen fa fa-arrows-alt"></button>
+                <button class="copy-button">copy link</button>
+                <button class="vote arrow2 up"></button>
+                <button class="vote arrow2 down"></button>
             </footer>
         </main>
     </div>

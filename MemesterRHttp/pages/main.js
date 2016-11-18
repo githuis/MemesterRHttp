@@ -10,6 +10,7 @@ var $progress = $('.progress');
 
 $progress.val(0);
 $volumeSlider.val(video.volume * 100);
+
 var changing = false;
 
 
@@ -23,11 +24,13 @@ $(".play").click(function () {
 });
 
 $video.on('play', function () {
-    $playButton.toggleClass('fa-pause');
+    if(!$playButton.hasClass('fa-pause'))
+        $playButton.toggleClass('fa-pause');
 });
 
 $video.on('pause', function () {
-    $playButton.toggleClass('fa-pause');
+    if($playButton.hasClass('fa-pause'))
+        $playButton.toggleClass('fa-pause');
 });
 
 $('.slider').click(function() {
@@ -60,6 +63,7 @@ $progress.change(function (e) {
 
 $volumeSlider.change(function (e) {
     video.volume = $(this).val() / 100;
+    sessionStorage.setItem("vol",video.volume);
 });
 
 video.onvolumechange = function () {
@@ -72,7 +76,8 @@ $video.on('timeupdate', function () {
 });
 
 $video.on('ended', function () {
-    $playButton.toggleClass('fa-pause');
+    if($playButton.hasClass('fa-pause'))
+        $playButton.toggleClass('fa-pause');
     if (sessionStorage.getItem("ap") == "true")
         window.location = "memester.club"
 });

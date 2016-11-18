@@ -6,6 +6,7 @@ body {
     height: 100%;
     background-color: #1d1d1d;
     color: #fcfcff;
+    font-family: 'Raleway', sans-serif;
 }
 
 #container {
@@ -22,6 +23,48 @@ body {
     height: 42px;
     background-color: #2e2e2e;
     margin-bottom: 42px;
+    font-size: 32px;
+    line-height: 60px;
+}
+
+#container > header > div{
+    width:960px;
+    height: 100%;
+    margin: auto;
+}
+.dropdown {
+    width: 35px;
+    background-color: #fcfcff;
+    height: 1px;
+    padding-top: 1px;
+    float: right;
+    margin-top: 17px;
+    margin-right: 5px;
+}
+.dropdown:before {
+    content: "";
+    width: 35px;
+    height: 2px;
+    display: block;
+    background-color: #fcfcff;
+    margin-top: 10px;
+}
+.dropdown:after {
+    content: "";
+    width: 35px;
+    height: 2px;
+    display: block;
+    background-color: #fcfcff;
+    margin-top: 10px;
+}
+
+
+button{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    float: right;
+    color: #fcfcff;
 }
 
 #container > main {
@@ -76,6 +119,18 @@ body {
     left: 0;
 }
 
+main header {
+    background-color: #2e2e2e;
+    height:32px;
+    line-height: 32px;
+}
+
+main header button {
+    height:100%;
+    width:32px;
+    padding: 0;
+}
+
 .player-controls {
     display: flex;
 }
@@ -96,8 +151,14 @@ body {
 .player-controls > .volume {
     height: 30px;
     width: 80px;
-    margin-left: 10px;
+    margin-left: 5px;
     margin-right: 5px;
+}
+
+.player-controls > .copy-button {
+    border-left: solid 1px rgba(0,0,0,0.3);
+    border-right: solid 1px rgba(0,0,0,0.3);
+    white-space: nowrap;
 }
 
 .player-controls > .fullscreen {
@@ -110,4 +171,20 @@ body {
 
 .slider{
     float: right;
+    margin-left: 5px;
+    margin: auto 0;
+    display: block;
+}
+
+.fa-volume-up{
+    margin-left: 15px;
+    margin-top: 7px;
+
+}
+
+
+
+input {
+    background-color: rgba(0,0,0,0);
+    margin: 0;
 }
