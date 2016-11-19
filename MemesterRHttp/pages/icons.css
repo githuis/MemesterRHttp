@@ -87,7 +87,6 @@ ul {
     width: 43px;
     border: 2px solid #fcfcff;
     border-radius: 150px;
-    padding: 1px;
     cursor: pointer;
     float: left;
 
@@ -109,13 +108,13 @@ ul {
     margin-left: calc(100% - 16px);
 }
 
-.dropdown {
+.dropdown-icon {
     width: 35px;
     background-color: #fcfcff;
     height: 1px;
     padding-top: 1px;
 }
-.dropdown:before {
+.dropdown-icon:before {
     content: "";
     width: 35px;
     height: 2px;
@@ -123,7 +122,7 @@ ul {
     background-color: #fcfcff;
     margin-top: 10px;
 }
-.dropdown:after {
+.dropdown-icon:after {
     content: "";
     width: 35px;
     height: 2px;

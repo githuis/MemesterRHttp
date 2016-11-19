@@ -31,40 +31,33 @@ body {
     width:960px;
     height: 100%;
     margin: auto;
+    padding-left: 8px;
 }
-.dropdown {
-    width: 35px;
-    background-color: #fcfcff;
-    height: 1px;
-    padding-top: 1px;
+.dropdown-icon {
     float: right;
     margin-top: 17px;
     margin-right: 5px;
 }
-.dropdown:before {
-    content: "";
-    width: 35px;
-    height: 2px;
-    display: block;
-    background-color: #fcfcff;
-    margin-top: 10px;
-}
-.dropdown:after {
-    content: "";
-    width: 35px;
-    height: 2px;
-    display: block;
-    background-color: #fcfcff;
-    margin-top: 10px;
+
+#dropdown-wrapper{
+    height: 200px;
+    width: 300px;
+    background-color: #2a2a2a;
+    float: right;
+    visibility: hidden;
+    z-index: 1;
+    position: relative;
 }
 
 
 button{
     background-color: transparent;
+    font-family: 'Raleway', sans-serif;
     border: none;
     outline: none;
     float: right;
     color: #fcfcff;
+
 }
 
 #container > main {
@@ -95,6 +88,10 @@ button{
     display: none;
 }
 
+main{
+
+}
+
 #container.fullscreen > main {
     display: flex;
     flex-flow: column nowrap;
@@ -123,6 +120,8 @@ main header {
     background-color: #2e2e2e;
     height:32px;
     line-height: 32px;
+    padding-left: 8px;
+
 }
 
 main header button {
@@ -170,9 +169,8 @@ main header button {
 }
 
 .slider{
+    margin-top: 5px;
     float: right;
-    margin-left: 5px;
-    margin: auto 0;
     display: block;
 }
 

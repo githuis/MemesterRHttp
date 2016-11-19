@@ -24,6 +24,9 @@ $(".play").click(function () {
     $playButton.toggleClass('fa-pause');
 });
 
+$('#profile-btn').click(function () {
+});
+
 $video.on('play', function () {
     if(!$playButton.hasClass('fa-pause'))
         $playButton.toggleClass('fa-pause');

@@ -3,6 +3,8 @@
         $(this).toggleClass('active');
     });
 
+
+
     var progressBar = $('#progressBar');
     var video = document.getElementById("contentVideo");
     video.seekable = true;
