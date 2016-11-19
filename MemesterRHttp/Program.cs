@@ -19,10 +19,12 @@ namespace MemesterRHttp
         static void Main(string[] args)
         {
             var server = new HttpServer(5000, 3, "./public") { CachePublicFiles = true };
+            server.RegisterPlugin<>();
             var db = new SimpleSQLiteDatatase("memes.db");
             var dict = LoadMemes(db.GetTable<Meme>());
 
             var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(2));
+            server.CachePublicFiles = true;
 
             var rand = new Random();
 
@@ -192,7 +194,7 @@ namespace MemesterRHttp
                     {"m", list}
                 });
             });
-
+            
             server.Post("/login", (req, res) =>
             {
                 var login = req.GetBodyPostFormData();
@@ -298,6 +300,8 @@ namespace MemesterRHttp
         NSFW,
         NotFunny,
         Abuse,
-        Other
+        CopyrightClaim,
+        Other,
+
     }
 }
