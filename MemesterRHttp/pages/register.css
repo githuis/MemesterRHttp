@@ -11,45 +11,48 @@ body{
 button{
     font-family: 'Raleway', sans-serif;
     font-size: 20px;
-    height: 25px;
-    width: 40px;
+    height: 30px;
+    width: 100px;
     background: #2e2e2e;
     color: #dcdcdc;
+    float: right;
 }
 
 body > div{
     padding-top: 100px;
     margin: auto;
-    width: 220px;
+    width: 405px;
 }
 
-body > div > div {
+.info {
     display: inline;
     float: left;
-    width: 20px;
-    margin-top: 2px;
+    width: 16px;
+    margin-right: 5px;
 }
 
-body > div > div > div{
+.info > div{
     width: 20px;
     color: #dcdcdc;
     font-size: 20px;
-    margin-top: 8px;
+    line-height: 20px;
+    margin-top: 19px;
 }
 
-#form{
+.form{
+    margin-top: 2px;
     text-align: center;
     white-space: nowrap;
     color: #dcdcdc;
     font-size: 16px;
-    width: 200px;
+    width: 380px;
     display: inline;
     float: right;
 }
 
 input{
     margin-top: 10px;
-    width: 200px;
+    width: 380px;
     border: none;
     line-height: 30px;
     border-radius: 2px;
