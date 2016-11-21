@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RHttpServer;
+using RHttpServer.Plugins;
+using RHttpServer.Plugins.Default;
 using RHttpServer.Plugins.External;
 using RHttpServer.Response;
 
@@ -19,7 +21,6 @@ namespace MemesterRHttp
         static void Main(string[] args)
         {
             var server = new HttpServer(5000, 3, "./public") { CachePublicFiles = true };
-            server.RegisterPlugin<>();
             var db = new SimpleSQLiteDatatase("memes.db");
             var dict = LoadMemes(db.GetTable<Meme>());
 
@@ -244,7 +245,11 @@ namespace MemesterRHttp
             });
 
             crawler.Start();
-            
+
+
+            server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(60, 100, 5));
+            server.Start("memester.club");
+
         }
 
         private static ConcurrentDictionary<string, Meme> LoadMemes(IEnumerable<Meme> memes)
