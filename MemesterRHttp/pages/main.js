@@ -14,6 +14,18 @@ $volumeSlider.val(video.volume * 100);
 
 var changing = false;
 
+var $dropdown = $('.dropdown');
+var $button = $dropdown.find('button');
+
+$button.click(function() {
+    $dropdown.toggleClass('active');
+});
+
+$button.blur(function() {
+    if(!$(".dropdown").is(":focus"))
+        $dropdown.removeClass('active');
+});
+
 
 $(".play").click(function () {
     if (video.paused) {

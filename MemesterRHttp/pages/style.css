@@ -39,14 +39,22 @@ body {
     margin-right: 5px;
 }
 
-#dropdown-wrapper{
-    height: 200px;
-    width: 300px;
-    background-color: #2a2a2a;
-    float: right;
-    visibility: hidden;
-    z-index: 1;
+.dropdown {
     position: relative;
+    display: inline-block;
+}
+
+.dropdown ul {
+    display: none;
+}
+
+.dropdown.active ul {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: red;
+    margin: 0;
 }
 
 
