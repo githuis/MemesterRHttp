@@ -22,7 +22,7 @@ $button.click(function() {
 });
 
 $button.blur(function() {
-    if(!$(".dropdown").is(":focus"))
+    if(!$(".dropdown").is(":hover"))
         $dropdown.removeClass('active');
 });
 
