@@ -24,10 +24,10 @@ $button.click(function() {
     $dropdown.toggleClass('active');
 });
 
-$button.blur(function() {
-    if(!$dropdown.is(":hover"))
-        $dropdown.removeClass('active');
-});
+// $button.blur(function() {
+//     if(!$dropdown.is(":hover"))
+//         $dropdown.removeClass('active');
+// });
 
 
 $playButton.click(function () {
@@ -150,11 +150,7 @@ video.onloadedmetadata = function() {
     var minutes = Math.floor(time / 60);
     var seconds = Math.floor(time - minutes * 60);
     if (seconds.toString().length == 1) seconds = '0' + seconds;
-    if (isNaN(minutes) || isNaN(seconds))
-        $totalTime.text("0:00");
-    else
-        $totalTime.text(minutes + ':' + seconds);
-
+    $totalTime.text(minutes + ':' + seconds);
 };
 
 function login() {
@@ -187,7 +183,7 @@ $html.bind('keydown', function(event) {
     }
 });
 
-$html.mousedown(function (event) {
+$html.mousedown(function () {
     if (!$dropdown.is(":hover") && $dropdown.hasClass('active'))
         $dropdown.removeClass('active');
 });

@@ -44,6 +44,7 @@ body {
 .dropdown {
     position: relative;
     display: inline-block;
+    float: right;
 }
 
 .dropdown ul {
@@ -51,10 +52,25 @@ body {
     font-size: 16px;
     border: none;
     border-radius: 2px;
+    list-style-type: none;
+    padding: 15px;
 }
 
 .dropdown li{
     margin: 0;
+}
+.dropdown li .fa{
+    width: 15px;
+    margin-right: 5px;
+}
+.dropdown li input{
+    width: 200px;
+}
+
+
+#register{
+    float: left;
+    margin-left: 20px;
 }
 
 .time{
@@ -73,10 +89,11 @@ body {
     display: block;
     position: absolute;
     top: 0;
-    left: 0;
+    left: -226px;
     background-color: #2e2e2e;
     margin: 0;
     width:230px;
+    z-index: 1;
 }
 
 
