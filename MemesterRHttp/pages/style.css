@@ -57,6 +57,18 @@ body {
     margin: 0;
 }
 
+.time{
+    font-size: 12px;
+    line-height: 30px;
+    font-family: 'Lato', sans-serif;
+}
+.currentTime{
+    margin-right: 3px;
+}
+.totalTime{
+    margin-left: 3px;
+}
+
 .dropdown.active ul {
     display: block;
     position: absolute;

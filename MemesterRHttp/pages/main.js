@@ -3,10 +3,11 @@ var $video = $container.find("main video");
 var video = $video.get(0);
 
 var $playButton = $('.play');
-var $fullscreen = $('.fullscreen');
 var $volumeSlider = $('.volume');
 var $progress = $('.progress');
 var $volIcon = $('.player-controls > i');
+var $currentTime = $('.currentTime');
+var $totalTime = $('.totalTime');
 
 
 $progress.val(0);
@@ -22,12 +23,12 @@ $button.click(function() {
 });
 
 $button.blur(function() {
-    if(!$(".dropdown").is(":hover"))
+    if(!$dropdown.is(":hover"))
         $dropdown.removeClass('active');
 });
 
 
-$(".play").click(function () {
+$playButton.click(function () {
     if (video.paused) {
         video.play()
     } else {
@@ -72,8 +73,8 @@ $container.find('.fullscreen').click(function () {
 
 $progress.on('input', function (e) {
     changing = true;
-    var progress = (video.duration / 100) * $(this).val();
-    video.currentTime = progress;
+    video.currentTime = (video.duration / 100) * $(this).val();
+    setCurrentTime();
     changing = false;
 });
 
@@ -84,6 +85,10 @@ $volumeSlider.on('input', function (e) {
     sessionStorage.setItem("vol", val);
 });
 
+$("#register").click(function () {
+    location.href = "/pages/register.html";
+});
+
 video.onvolumechange = function () {
     var v = video.volume * 100;
     $volumeSlider.val(v);
@@ -92,8 +97,19 @@ video.onvolumechange = function () {
 
 $video.on('timeupdate', function () {
     if(changing == false)
-        $progress.val((video.currentTime * 100) / video.duration)
+    {
+        $progress.val((video.currentTime * 100) / video.duration);
+        setCurrentTime();
+    }
 });
+
+function setCurrentTime() {
+    var time = video.currentTime;
+    var minutes = Math.floor(time / 60);
+    var seconds = Math.floor(time - minutes * 60);
+    if (seconds.toString().length == 1) seconds = '0' + seconds;
+    $currentTime.text(minutes + ':' + seconds);
+}
 
 $video.on('ended', function () {
     if($playButton.hasClass('fa-pause'))
@@ -118,23 +134,41 @@ if (vol != null && vol != "null"){
     setVolIcon(v);
 }
 
+video.onloadedmetadata = function() {
+    var time = video.duration;
+    console.log(time);
+    var minutes = Math.floor(time / 60);
+    var seconds = Math.floor(time - minutes * 60);
+    if (seconds.toString().length == 1) seconds = '0' + seconds;
+    if (isNaN(minutes) || isNaN(seconds))
+        $totalTime.text("0:00");
+    else
+        $totalTime.text(minutes + ':' + seconds);
+};
+
+var time = video.duration;
+console.log(time);
+var minutes = Math.floor(time / 60);
+var seconds = Math.floor(time - minutes * 60);
+$totalTime.text(minutes + ':' + seconds);
+
 function setVolIcon(vol) {
     if (vol == 0){
         if (!$volIcon.hasClass("fa-volume-off"))
-            $volIcon.toggleClass("fa-volume-off");
+            $volIcon.addClass("fa-volume-off");
         $volIcon.removeClass("fa-volume-down");
         $volIcon.removeClass("fa-volume-up");
     }
 
     else if (vol < 50){
         if (!$volIcon.hasClass("fa-volume-down"))
-            $volIcon.toggleClass("fa-volume-down");
+            $volIcon.addClass("fa-volume-down");
         $volIcon.removeClass("fa-volume-off");
         $volIcon.removeClass("fa-volume-up");
     }
     else {
         if (!$volIcon.hasClass("fa-volume-up"))
-            $volIcon.toggleClass("fa-volume-up");
+            $volIcon.addClass("fa-volume-up");
         $volIcon.removeClass("fa-volume-down");
         $volIcon.removeClass("fa-volume-off");
     }

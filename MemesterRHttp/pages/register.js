@@ -1,14 +1,16 @@
 var $status = $('#status');
 
 function register() {
-
     $status.text("");
     var usr = $('#usr').text();
     var pwd1 = $('#pwd1').text();
     var pwd2 = $('#pwd2').text();
 
     if (!checkInput(usr, pwd1, pwd2))
+    {
+        $status.text("Invalid input");
         return;
+    }
 
     $.ajax({
         type: "POST",
