@@ -2,13 +2,15 @@ var $container = $('#container');
 var $video = $container.find("main video");
 var video = $video.get(0);
 
+var $html = $('html');
 var $playButton = $('.play');
 var $volumeSlider = $('.volume');
 var $progress = $('.progress');
 var $volIcon = $('.player-controls > i');
 var $currentTime = $('.currentTime');
 var $totalTime = $('.totalTime');
-
+var $usr = $('input[text]');
+var $pwd = $('input[password]');
 
 $progress.val(0);
 $volumeSlider.val(video.volume * 100);
@@ -152,13 +154,44 @@ video.onloadedmetadata = function() {
         $totalTime.text("0:00");
     else
         $totalTime.text(minutes + ':' + seconds);
+
 };
 
-var time = video.duration;
-console.log(time);
-var minutes = Math.floor(time / 60);
-var seconds = Math.floor(time - minutes * 60);
-$totalTime.text(minutes + ':' + seconds);
+function login() {
+    var usr = $usr.text();
+    var pwd = $pwd.text();
+    alert(usr + pwd);
+}
+
+$html.bind('keydown', function(event) {
+    if (!$usr.is(":focus") && !$pwd.is(':focus')){
+        switch (event.keyCode){
+            case 32:
+                playPause();
+                event.preventDefault();
+                break;
+            case 37:
+                history.back();
+                event.preventDefault();
+                break;
+            case 39:
+                location.reload();
+                event.preventDefault();
+                break;
+        }
+    }
+    else if (event.keyCode == 13)
+    {
+        login();
+        event.preventDefault();
+    }
+});
+
+$html.mousedown(function (event) {
+    if (!$dropdown.is(":hover") && $dropdown.hasClass('active'))
+        $dropdown.removeClass('active');
+});
+
 
 function setVolIcon(vol) {
     if (vol == 0){
