@@ -29,13 +29,17 @@ $button.blur(function() {
 
 
 $playButton.click(function () {
+    playPause();
+});
+
+function playPause() {
     if (video.paused) {
         video.play()
     } else {
         video.pause()
     }
     $playButton.toggleClass('fa-pause');
-});
+}
 
 $('#profile-btn').click(function () {
 });
@@ -133,6 +137,10 @@ if (vol != null && vol != "null"){
     video.volume = v / 100;
     setVolIcon(v);
 }
+
+$video.click(function () {
+    playPause();
+});
 
 video.onloadedmetadata = function() {
     var time = video.duration;
