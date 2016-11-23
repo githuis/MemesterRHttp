@@ -24,6 +24,18 @@ $button.click(function() {
     $dropdown.toggleClass('active');
 });
 
+$(".copy-button").click(function () {
+    copyToClipboard();
+});
+
+function copyToClipboard() {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(window.location.href).select();
+    document.execCommand("copy");
+    $temp.remove();
+}
+
 // $button.blur(function() {
 //     if(!$dropdown.is(":hover"))
 //         $dropdown.removeClass('active');
