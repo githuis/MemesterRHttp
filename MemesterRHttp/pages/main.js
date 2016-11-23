@@ -78,7 +78,7 @@ $('.slider').click(function() {
     sessionStorage.setItem("ap", auto);
 });
 
-$container.find('.fullscreen').click(function () {
+$container.find('.fs-btn').click(function () {
     $container.toggleClass('fullscreen');
     var fs = sessionStorage.getItem("fs");
     if (fs == null || fs == "null" || fs == "mini")
@@ -86,7 +86,6 @@ $container.find('.fullscreen').click(function () {
     else
         fs = "mini";
     sessionStorage.setItem("fs", fs);
-
 });
 
 $progress.on('input', function (e) {
@@ -171,6 +170,24 @@ function login() {
     alert(usr + pwd);
 }
 
+function toggleMute() {
+    var m = sessionStorage.getItem("mute");
+    if (m == "true"){
+        m = "false";
+        video.muted = false;
+        setVolIcon(video.volume * 100);
+    }
+    else {
+        m = "true";
+        video.muted = true;
+        setVolIcon(0);
+    }
+
+    sessionStorage.setItem("mute", m);
+}
+
+$("#muter").click(toggleMute);
+
 $html.bind('keydown', function(event) {
     if (!$usr.is(":focus") && !$pwd.is(':focus')){
         switch (event.keyCode){
@@ -194,6 +211,54 @@ $html.bind('keydown', function(event) {
         event.preventDefault();
     }
 });
+
+var $upvote = $("#upvote");
+var $downvote = $("#downvote");
+
+function upvote() {
+    if ($downvote.hasClass("voteSet"))
+    {
+        $downvote.removeClass("voteSet");
+        $downvote.addClass("hover-btn");
+    }
+
+    if (!$upvote.hasClass("voteSet"))
+    {
+        $upvote.addClass("voteSet");
+        $upvote.removeClass("hover-btn");
+        // add vote POST action
+    }
+    else {
+        $upvote.removeClass("voteSet");
+        $upvote.addClass("hover-btn");
+        // remove vote POST action
+    }
+}
+
+function downvote() {
+    if ($upvote.hasClass("voteSet"))
+    {
+        $upvote.removeClass("voteSet");
+        $upvote.addClass("hover-btn");
+    }
+
+    if (!$downvote.hasClass("voteSet"))
+    {
+        $downvote.addClass("voteSet");
+        $downvote.removeClass("hover-btn");
+        // add vote POST action
+    }
+    else {
+        $downvote.removeClass("voteSet");
+        $downvote.addClass("hover-btn");
+        // remove vote POST action
+    }
+}
+
+$upvote.click(function () {
+    upvote();
+});
+$downvote.click(downvote);
 
 $html.mousedown(function () {
     if (!$dropdown.is(":hover") && $dropdown.hasClass('active'))

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:200|Lato:300" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
     <title>Memester.Club</title>
 
     <meta property="og:title" content="<%title%> - Memester" />
@@ -47,9 +47,9 @@
 
         <main>
             <header>This is a webm about :^)
-                <button class="arrow1 right" aria-hidden="true"></button>
+                <button class="hover-btn arrow1 right" aria-hidden="true"></button>
                 <div class="slider"></div>
-                <button class="arrow1 left" aria-hidden="true"></button>
+                <button class="hover-btn arrow1 left" aria-hidden="true"></button>
             </header>
 
             <div>
@@ -59,16 +59,16 @@
             </div>
 
             <footer class="player-controls">
-                <button class="play fa fa-play"></button>
+                <button class="hover-btn play fa fa-play"></button>
                 <div class="time currentTime">0:00</div>
                 <input type="range" class="progress">
                 <div class="time totalTime">0:00</div>
-                <i class="fa fa-volume-up" aria-hidden="true"></i>
+                <i class="fa fa-volume-up" id="muter" aria-hidden="true"></i>
                 <input type="range" class="volume">
-                <button class="fullscreen fa fa-arrows-alt"></button>
-                <button class="copy-button">copy link</button>
-                <button class="vote arrow2 up"></button>
-                <button class="vote arrow2 down"></button>
+                <button class="hover-btn fs-btn fa fa-arrows-alt"></button>
+                <button class="hover-btn copy-button">copy link</button>
+                <button class="hover-btn vote arrow2 up" id="upvote"></button>
+                <button class="hover-btn vote arrow2 down" id="downvote"></button>
             </footer>
         </main>
     </div>
