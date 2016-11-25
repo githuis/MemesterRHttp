@@ -36,6 +36,15 @@ body {
     margin: auto;
     padding-left: 8px;
 }
+
+#dropdown-btn{
+    margin: 0;
+    padding: 0 0 0 0;
+    height: 60px;
+    margin-top: -11px;
+
+}
+
 .dropdown-icon {
     float: right;
     display: inline-block;
@@ -98,7 +107,7 @@ body {
     display: block;
     position: absolute;
     top: 0;
-    left: -226px;
+    left: -225px;
     background-color: #2e2e2e;
     margin: 0;
     width:230px;
@@ -145,8 +154,8 @@ button{
     display: none;
 }
 
-main{
-
+#videoDiv{
+    background-color: #000;
 }
 
 #container.fullscreen > main {

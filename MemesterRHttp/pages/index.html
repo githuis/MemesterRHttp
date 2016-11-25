@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
-    <title>Memester.Club</title>
+    <title>Memester.club</title>
 
     <meta property="og:title" content="<%title%> - Memester" />
     <meta property="og:type" content="video/webm" />
@@ -21,10 +21,8 @@
     <div id="container">
         <header>
             <div>Memester.club
-                <!--<div class="dropdown-icon"></div>-->
-
                 <div class="dropdown">
-                    <button class="fa fa-bars" id="dropdown-btn"></button>
+                    <button id="dropdown-btn"><div class="dropdown-icon"></div></button>
                     <ul>
                         <li>
                             <div class="fa fa-user"></div>
@@ -38,26 +36,21 @@
                             <button id="login">Login</button>
                             <button id="register">Register</button>
                         </li>
-
                     </ul>
                 </div>
-
             </div>
         </header>
-
         <main>
             <header>This is a webm about :^)
                 <button class="hover-btn arrow1 right" aria-hidden="true"></button>
                 <div class="slider"></div>
                 <button class="hover-btn arrow1 left" aria-hidden="true"></button>
             </header>
-
-            <div>
+            <div id="videoDiv">
                 <video src="http://memester.club/instameme" autoplay>
-                    It is 2016 and your browser's still not down with a litle webm
+                    It is 2016 and your browser's still not down with a little webm
                 </video>
             </div>
-
             <footer class="player-controls">
                 <button class="hover-btn play fa fa-play"></button>
                 <div class="time currentTime">0:00</div>
@@ -72,33 +65,6 @@
             </footer>
         </main>
     </div>
-
-
-    <!--<header>Memester</header>-->
-
-    <!--<div id="content">-->
-    <!--&lt;!&ndash;<header>-->
-    <!--<%title%>-->
-    <!--</header>&ndash;&gt;-->
-
-
-    <!--<footer>-->
-    <!--<button class="fullscreen">FS</button>-->
-    <!--</footer>-->
-
-    <!--&lt;!&ndash;<footer>-->
-    <!--<div id="videoControls">-->
-    <!--<div id="playButton" class="play" onclick="playPauseToggle()"></div>-->
-    <!--<input type="range" id="progressBar">-->
-    <!--<div class="fullscreen" onclick="toggleFullscreen()"></div>-->
-    <!--</div>-->
-    <!--<div class="slider"></div>-->
-    <!--</footer>&ndash;&gt;-->
-
-    <!--</div>-->
-    <script>
-
-    </script>
     <script src="main.js"></script>
 </body>
 </html>
