@@ -272,10 +272,9 @@ main header button {
     display: block;
 }
 
-.player-controls > i {
+#muter {
     margin-left: 15px;
     margin-right: 5px;
-    margin-top: 7px;
     min-width: 10px;
 }
 
@@ -284,4 +283,28 @@ main header button {
 input {
     background-color: rgba(0,0,0,0);
     margin: 0;
+}
+
+#account-div{
+    display: none;
+}
+
+#account-div ul{
+    padding: 0;
+    left: -195px;
+}
+
+#account-div ul li{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#account-div ul li:first-child {
+    font-size: 24px;
+    border-bottom: solid #838383 1px;
+}
+
+#account-div button{
+    float: left;
+    height: 32px;
+    width: 40%;
 }

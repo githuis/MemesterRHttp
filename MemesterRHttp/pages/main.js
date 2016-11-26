@@ -6,11 +6,11 @@ var $html = $('html');
 var $playButton = $('.play');
 var $volumeSlider = $('.volume');
 var $progress = $('.progress');
-var $volIcon = $('.player-controls > i');
+var $volIcon = $('#muter');
 var $currentTime = $('.currentTime');
 var $totalTime = $('.totalTime');
-var $usr = $('input[text]');
-var $pwd = $('input[password]');
+var $usr = $('#username');
+var $pwd = $('#password');
 
 $progress.val(0);
 $volumeSlider.val(video.volume * 100);
@@ -24,9 +24,9 @@ $button.click(function() {
     $dropdown.toggleClass('active');
 });
 
-$(".copy-button").click(function () {
-    copyToClipboard();
-});
+$(".copy-button").click(copyToClipboard);
+$("#logout").click(logout);
+$("#login").click(login);
 
 function copyToClipboard() {
     var $temp = $("<input>");
@@ -80,6 +80,7 @@ $('.slider').click(function() {
 
 $container.find('.fs-btn').click(function () {
     $container.toggleClass('fullscreen');
+    $(".fs-btn").toggleClass('fa-compress');
     var fs = sessionStorage.getItem("fs");
     if (fs == null || fs == "null" || fs == "mini")
         fs = "full";
@@ -137,6 +138,8 @@ $video.on('ended', function () {
 
 if (sessionStorage.getItem("fs") == "full"){
     $container.toggleClass('fullscreen');
+    $(".fs-btn").toggleClass('fa-compress');
+
 }
 
 if (sessionStorage.getItem("ap") == "true"){
@@ -286,4 +289,34 @@ function setVolIcon(vol) {
         $volIcon.removeClass("fa-volume-down");
         $volIcon.removeClass("fa-volume-off");
     }
+}
+
+function isLoggedin() {
+    var ss = sessionStorage.getItem("usr");
+    if(ss == null || ss == "null" || ss == "")
+        return false;
+    return true
+
+}
+
+function login() {
+    var username = $usr.val();
+    var password = $pwd.val();
+    alert(username +" "+ password);
+    $.post("/login",{usr:username,pwd:password},function(data){
+        if(data == "ok")
+            sessionStorage.setItem("usr",username)
+    });
+    sessionStorage.setItem("usr",username);
+    location.reload();
+}
+
+function logout() {
+    sessionStorage.setItem("usr","");
+    location.reload();
+}
+
+if(isLoggedin()){
+    $("#account-div").css("display", "block");
+    $("#login-div").css("display", "none");
 }
