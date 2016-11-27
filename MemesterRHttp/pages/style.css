@@ -104,6 +104,7 @@ body {
 }
 
 .dropdown.active ul {
+    transition: height 500ms linear;
     display: block;
     position: absolute;
     top: 0;
@@ -329,4 +330,20 @@ input {
     -ms-user-select: none;
     user-select: none;
     cursor: default;
+}
+
+#thread{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.title-bar{
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+}
+
+.title-bar.no-sel{
+    padding-right: 10px;
+    padding-left: 10px;
 }

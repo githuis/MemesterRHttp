@@ -17,6 +17,7 @@ var $dropdown = $('.dropdown');
 var $button = $dropdown.find('button');
 var $fsBtn = $(".fs-btn");
 var $report = $("#report");
+var $thread = $("#thread");
 var changing = false;
 
 
@@ -44,12 +45,10 @@ function toggleMute() {
     if (m == "true"){
         m = "false";
         video.muted = false;
-        setVolIcon(video.volume * 100);
     }
     else {
         m = "true";
         video.muted = true;
-        setVolIcon(0);
     }
 
     sessionStorage.setItem("mute", m);
@@ -64,7 +63,7 @@ function setCurrentTime() {
 }
 
 function setVolIcon(vol) {
-    if (vol == 0){
+    if (vol == 0 || video.muted){
         if (!$volIcon.hasClass("fa-volume-off"))
             $volIcon.addClass("fa-volume-off");
         $volIcon.removeClass("fa-volume-down");
@@ -87,12 +86,7 @@ function setVolIcon(vol) {
 
 function isLoggedin() {
     var ss = sessionStorage.getItem("usr");
-    if(ss == null || ss == "null" || ss == "")
-        return false;
-    return true
-
-
-
+    return !(ss == null || ss == "null" || ss == "");
 }
 
 function login() {
@@ -112,6 +106,7 @@ function login() {
 }
 
 function logout() {
+    localStorage.setItem("usr","");
     sessionStorage.setItem("usr","");
     location.reload();
 }
@@ -186,6 +181,10 @@ $("#register").click(function () {
     location.href = "/pages/register.html";
 });
 
+$thread.click(function () {
+    window.location.href = "/thread/" + $thread.text();
+});
+
 $button.click(function() {
     $dropdown.toggleClass('active');
 });
@@ -195,7 +194,7 @@ $("#logout").click(logout);
 $("#login").click(login);
 $playButton.click(playPause);
 $video.click(playPause);
-$("#muter").click(toggleMute);
+$volIcon.click(toggleMute);
 $upvote.click(upvote);
 $downvote.click(downvote);
 

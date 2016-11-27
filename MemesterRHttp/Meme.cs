@@ -17,7 +17,11 @@ namespace MemesterRHttp
         [Ignore]
         public string Path => System.IO.Path.Combine("public", "memes", $"{OrgId}{Ext}");
         [Ignore]
-        public string Thumb => System.IO.Path.Combine("public", "thumb", $"{OrgId}.png");
+        public string WebPath => $"/memes/{OrgId}{Ext}";
+        [Ignore]
+        public string Thumb => System.IO.Path.Combine("public", "thumbs", $"{OrgId}.png");
+        [Ignore]
+        public string WebThumb => $"/thumbs/{OrgId}{Ext}";
 
 
 

@@ -63,11 +63,29 @@ namespace MemesterRHttp
                 {
                     {"title", meme.Title},
                     {"score", meme.Score},
-                    {"path", meme.Path.Replace("\\", "/").Replace("public", "")},
-                    {"thread", meme.Thread },
-                    {"thumb", meme.Thumb.Replace("\\", "/").Replace("public", "") }
+                    {"path", meme.WebPath},
+                    {"thread", meme.Thread},
+                    {"thumb", meme.WebThumb}
                 };
                 res.RenderPage("pages/singlememe.ecs", rp);
+            });
+
+            server.Get("/user/:user/liked", (req, res) =>
+            {
+                var user = req.Params["user"];
+                var pwd = req.Queries["pwd"];
+                var items = req.Queries["p"];
+                if (string.IsNullOrEmpty(items)) items = "1";
+                var u = db.Get<User>(user);
+                int i;
+                if (u == null || u.PassHash != pwd || !int.TryParse(items, out i))
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+                var liked = u.Votes.Skip(i - 1 * 20).Take(20);
+                res.SendJson(liked);
             });
 
             server.Post("/meme/:meme/vote", (req, res) =>
