@@ -16,12 +16,14 @@ namespace MemesterRHttp
 {
     class Program
     {
-        private static readonly object _reportLock = new object();
+        private static readonly object ReportLock = new object();
 
         static void Main(string[] args)
         {
-            var server = new HttpServer(5000, 3, "./public") { CachePublicFiles = true };
+            var server = new HttpServer(5000, 3, "./public", true) { CachePublicFiles = true };
             var db = new SimpleSQLiteDatatase("memes.db");
+            db.CreateTable<Meme>();
+            db.CreateTable<User>();
             var dict = LoadMemes(db.GetTable<Meme>());
 
             var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(2));
@@ -61,9 +63,11 @@ namespace MemesterRHttp
                 {
                     {"title", meme.Title},
                     {"score", meme.Score},
-                    {"path", meme.Path}
+                    {"path", meme.Path.Replace("\\", "/").Replace("public", "")},
+                    {"thread", meme.Thread },
+                    {"thumb", meme.Thumb.Replace("\\", "/").Replace("public", "") }
                 };
-                res.RenderPage("/pages/singlememe.ecs", rp);
+                res.RenderPage("pages/singlememe.ecs", rp);
             });
 
             server.Post("/meme/:meme/vote", (req, res) =>
@@ -140,7 +144,7 @@ namespace MemesterRHttp
                 }
                 
                 // will do for now
-                lock (_reportLock)
+                lock (ReportLock)
                 {
                     File.AppendAllText("reported.txt", $"{m}\t{uid}{rn}\t{reason}\n");
                 }
@@ -199,7 +203,7 @@ namespace MemesterRHttp
             server.Post("/login", (req, res) =>
             {
                 var login = req.GetBodyPostFormData();
-                var uid = login["uid"];
+                var uid = login["usr"];
                 var pwd = login["pwd"];
                 if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(pwd))
                 {
@@ -244,11 +248,11 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            crawler.Start();
+            //crawler.Start();
 
 
             server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(60, 100, 5));
-            server.Start("memester.club");
+            server.Start(true);
 
         }
 

@@ -20,12 +20,11 @@
 <body>
     <div id="container">
         <header>
-            <div>Memester.club
+            <div class="no-sel">Memester.club
 
                 <div class="dropdown">
                     <button id="dropdown-btn"><div class="dropdown-icon"></div></button>
-                  <div id="login-div">
-
+                    <div id="login-div">
                       <ul>
                           <li>
                               <div class="fa fa-user"></div>
@@ -40,10 +39,10 @@
                               <button id="register">Register</button>
                           </li>
                       </ul>
-                  </div>
+                    </div>
                     <div id="account-div" >
                         <ul>
-                            <li>Accout Name</li>
+                            <li id="accName">Accout Name</li>
                             <li class="hover-btn">View profile</li>
                             <li class="hover-btn" id="logout">Logout</li>
                         </ul>
@@ -67,9 +66,9 @@
             </div>
             <footer class="player-controls">
                 <button class="hover-btn play fa fa-play"></button>
-                <div class="time currentTime">0:00</div>
+                <div class="no-sel time currentTime">0:00</div>
                 <input type="range" class="progress">
-                <div class="time totalTime">0:00</div>
+                <div class="no-sel time totalTime">0:00</div>
                 <button class="fa fa-volume-up" id="muter" aria-hidden="true"></button>
                 <input type="range" class="volume">
                 <button class="hover-btn fs-btn fa fa-expand "></button>
@@ -77,6 +76,7 @@
                 <button class="hover-btn vote arrow2 up" id="upvote"></button>
                 <button class="hover-btn vote arrow2 down" id="downvote"></button>
             </footer>
+            <div class="no-sel" id="report">Report</div>
         </main>
     </div>
     <script src="main.js"></script>

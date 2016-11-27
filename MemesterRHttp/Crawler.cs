@@ -32,6 +32,7 @@ namespace MemesterRHttp
                 {
                     var memes = Crawl();
                     Parallel.ForEach(memes, CheckIfExists);
+                    Console.WriteLine("Done downloading for now");
                     await Task.Delay(_interval);
                 }
             });
@@ -39,7 +40,7 @@ namespace MemesterRHttp
         
         private void CheckIfExists(CMeme cmeme)
         {
-            if (_dict.ContainsKey(cmeme.Title) || cmeme.Url.EndsWith("gif")) return;
+            if (_dict.ContainsKey(cmeme.OrgId) || cmeme.Url.EndsWith("gif")) return;
             var meme = DownloadMeme(cmeme);
             _dict.TryAdd(meme.OrgId, meme);
             _db.Insert(meme);
@@ -56,14 +57,20 @@ namespace MemesterRHttp
             var nodes = doc.DocumentNode.SelectNodes("//div[@class='fileText']/a");
             foreach (var node in nodes)
             {
+                var th = node.ParentNode.ParentNode.ParentNode.ParentNode.ParentNode.InnerText;
+                th = th.Substring(0, th.IndexOfAny("0123456789".ToCharArray()));
+                if (th.StartsWith("Anonymous")) th = th.Substring(9);
+
                 string id = node.InnerText.Replace(".webm", "").Replace(".gif", "");
                 string re = node.Attributes["href"].Value;
                 if (!re.StartsWith("http")) re = "http:" + re;
                 list.Add(new CMeme
                 {
                     Title = id,
-                    Url = re
-                });
+                    Url = re,
+                    OrgId = re.Substring(re.LastIndexOf("/") + 1).Replace(".webm", ""),
+                    Thread = th
+            });
             }
 
             return list;
@@ -78,11 +85,12 @@ namespace MemesterRHttp
             wc.DownloadFile(new Uri(meme.Url), filepath);
             var m = new Meme
             {
-                OrgId = Path.GetFileNameWithoutExtension(filename),
+                OrgId = meme.OrgId,
                 Ext = Path.GetExtension(filename),  
-                Title = meme.Title
+                Title = meme.Title,
+                Thread = meme.Thread
             };
-            CreateThumb(m);
+            //CreateThumb(m);
             return m;
         }
 

@@ -308,3 +308,25 @@ input {
     height: 32px;
     width: 40%;
 }
+
+#report{
+    color: #dcdcdc;
+    text-decoration: underline;
+    width: 50px;
+    margin: 50px auto;
+    cursor: pointer;
+}
+
+#report.fullscreen{
+    display: none;
+}
+
+.no-sel{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
