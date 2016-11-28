@@ -26,7 +26,7 @@ namespace MemesterRHttp
             db.CreateTable<User>();
             var dict = LoadMemes(db.GetTable<Meme>());
 
-            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(2));
+            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(200));
             server.CachePublicFiles = true;
 
             var rand = new Random();

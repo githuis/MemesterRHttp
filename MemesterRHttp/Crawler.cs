@@ -90,7 +90,7 @@ namespace MemesterRHttp
                 Title = meme.Title,
                 Thread = meme.Thread
             };
-            //CreateThumb(m);
+            CreateThumb(m);
             return m;
         }
 
