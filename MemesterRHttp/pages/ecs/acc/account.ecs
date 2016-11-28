@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <!--<link rel="stylesheet" href="account.css">-->
-    <¤pages/acc/account.css¤>
+    <style><¤pages/acc/account.css¤></style>
     <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
-    <title>user page</title>
+    <title>User page - Memester</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
     <header>
-        <div><a href="http://Memester.club/random">Memester.club</a></div>
+        <div><a href="/random">Memester.club</a></div>
     </header>
 </div>
 
@@ -32,7 +32,8 @@
     </div>
     <template id="template"><div class="meme"><img src="http://lorempixel.com/180/180/" alt="meme"></div></template>
 
-    <!--<script src="account.js"></script>-->
-    <¤pages/acc/acount.js¤>
+    <script>
+        <¤pages/acc/acount.js¤>
+    </script>
 </body>
 </html>

@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title><%thread%></title>
-    <!--<link rel="stylesheet" href="thread.css">-->
-    <¤pages/thr/thread.css¤>
+        <style><¤pages/thr/thread.css¤></style>
     <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
@@ -22,6 +21,7 @@
 
 
     <script>
+        var tId = "<%thread%>";
         <¤pages/thr/thread.js¤>
     </script>
 </body>

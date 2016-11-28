@@ -6,8 +6,10 @@
     <meta charset="UTF-8">
     <!--<link rel="stylesheet" href="icons.css">-->
     <!--<link rel="stylesheet" href="style.css">-->
-    <¤pages/style.css¤>
-    <¤pages/icons.css¤>
+    <style>
+        <¤pages/style.css¤>
+        <¤pages/icons.css¤>
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
@@ -58,7 +60,7 @@
             </div>
         </header>
         <main>
-            <header><div id="thread" class="title-bar">here goes thread</div><div class="title-bar no-sel fa fa-angle-right"></div><div class="title-bar">This is a webm about :^)</div>
+            <header><div id="thread" class="title-bar"><%thread%></div><div class="title-bar no-sel fa fa-angle-right"></div><div class="title-bar"><%title%></div>
                 <button class="hover-btn arrow1 right" aria-hidden="true"></button>
                 <div class="slider"></div>
                 <button class="hover-btn arrow1 left" aria-hidden="true"></button>
@@ -83,6 +85,6 @@
             <div class="no-sel" id="report">Report</div>
         </main>
     </div>
-        <¤pages/main.js¤>
+        <script><¤pages/main.js¤></script>
 </body>
 </html>
