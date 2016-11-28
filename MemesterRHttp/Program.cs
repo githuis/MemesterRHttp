@@ -42,7 +42,7 @@ namespace MemesterRHttp
             {
                 var m = rand.Next(0, dict.Count);
                 var meme = dict.ElementAt(m).Value;
-                res.Redirect("/" + meme.Path);
+                res.Redirect(meme.WebPath);
             });
 
             server.Get("/meme/:meme", (req, res) =>
@@ -67,24 +67,23 @@ namespace MemesterRHttp
                     {"thread", meme.Thread},
                     {"thumb", meme.WebThumb}
                 };
-                res.RenderPage("pages/singlememe.ecs", rp);
+                res.RenderPage("pages/index.ecs", rp);
             });
 
             server.Get("/user/:user/liked", (req, res) =>
             {
                 var user = req.Params["user"];
-                var pwd = req.Queries["pwd"];
                 var items = req.Queries["p"];
                 if (string.IsNullOrEmpty(items)) items = "1";
                 var u = db.Get<User>(user);
                 int i;
-                if (u == null || u.PassHash != pwd || !int.TryParse(items, out i))
+                if (u == null || !int.TryParse(items, out i))
                 {
                     res.SendString("no");
                     return;
                 }
 
-                var liked = u.Votes.Skip(i - 1 * 20).Take(20);
+                var liked = u.Votes.Keys.Skip(i - 1 * 20).Take(20);
                 res.SendJson(liked);
             });
 
@@ -190,6 +189,13 @@ namespace MemesterRHttp
                 File.Delete(meme.Thumb);
             });
 
+            server.Post("/threads/:thread", (req, res) =>
+            {
+                var tid = req.Params["thread"];
+                var memes = db.Find<Meme>(m => m.Thread == tid);
+                res.SendJson(memes);
+            });
+
             server.Get("/multimeme", (req, res) =>
             {
                 var size = req.Queries["size"];
@@ -240,7 +246,7 @@ namespace MemesterRHttp
 
             server.Get("/register", (req, res) =>
             {
-                res.RenderPage("/pages/registerpage.ecs", null);
+                res.RenderPage("pages/reg/register.ecs", null);
             });
 
             server.Post("/register", (req, res) =>
@@ -324,11 +330,10 @@ namespace MemesterRHttp
 
     enum ReportReason
     {
-        NSFW,
-        NotFunny,
-        Abuse,
-        CopyrightClaim,
-        Other,
-
+        NSFW = 0,
+        Abuse = 1,
+        CopyrightClaim = 2,
+        TooKorean = 3,
+        Other = 4
     }
 }
