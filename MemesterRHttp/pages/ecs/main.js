@@ -151,6 +151,9 @@ function downvote() {
     }
 }
 
+function newMeme() {
+    window.location.href = "/"
+}
 
 // Click handling
 
@@ -189,6 +192,8 @@ $button.click(function() {
     $dropdown.toggleClass('active');
 });
 
+$("#right").click(newMeme);
+$("#left").click(history.back);
 $(".copy-button").click(copyToClipboard);
 $("#logout").click(logout);
 $("#login").click(login);
@@ -241,7 +246,7 @@ $video.on('ended', function () {
     if($playButton.hasClass('fa-pause'))
         $playButton.toggleClass('fa-pause');
     if (sessionStorage.getItem("ap") == "true")
-        window.location = "http://memester.club"
+        newMeme();
 });
 
 $video.on('play', function () {
@@ -266,7 +271,7 @@ $html.bind('keydown', function(event) {
                 event.preventDefault();
                 break;
             case 39:
-                location.reload();
+                newMeme();
                 event.preventDefault();
                 break;
         }
@@ -282,6 +287,8 @@ $html.mousedown(function () {
     if (!$dropdown.is(":hover") && $dropdown.hasClass('active'))
         $dropdown.removeClass('active');
 });
+
+
 
 
 // Page loading stuff
@@ -312,5 +319,7 @@ if(isLoggedin()){
     $("#login-div").css("display", "none");
     $("#accName").text(sessionStorage.getItem("usr"));
 }
+
+
 
 

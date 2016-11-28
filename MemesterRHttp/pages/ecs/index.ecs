@@ -61,12 +61,12 @@
         </header>
         <main>
             <header><div id="thread" class="title-bar"><%thread%></div><div class="title-bar no-sel fa fa-angle-right"></div><div class="title-bar"><%title%></div>
-                <button class="hover-btn arrow1 right" aria-hidden="true"></button>
+                <button class="hover-btn arrow1 right" aria-hidden="true" id="right"></button>
                 <div class="slider"></div>
-                <button class="hover-btn arrow1 left" aria-hidden="true"></button>
+                <button class="hover-btn arrow1 left" aria-hidden="true" id="left"></button>
             </header>
             <div id="videoDiv">
-                <video src="http://memester.club/instameme" autoplay>
+                <video src="<%path%>" autoplay>
                     It is 2016 and your browser's still not down with a little webm
                 </video>
             </div>
