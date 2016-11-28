@@ -192,8 +192,11 @@ $button.click(function() {
     $dropdown.toggleClass('active');
 });
 
+$("#left").click(function () {
+    history.back();
+});
+
 $("#right").click(newMeme);
-$("#left").click(history.back);
 $(".copy-button").click(copyToClipboard);
 $("#logout").click(logout);
 $("#login").click(login);
