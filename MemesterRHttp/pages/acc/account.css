@@ -66,30 +66,24 @@ body{
 
 .meme{
     float: left;
-    display: inline-flex;
+    height: 180px;
     padding: 4px;
-    height: 172px;
-    position: relative;
+
 }
+
+.meme:hover{
+    background-color: lawngreen;
+    transition: background-color 50ms linear;
+}
+
+
 
 .meme > img{
     border-radius: 2px;
     height: 100%;
 }
 
-.meme:after{
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    content: " ";
-    height: 100%;
-    background: rgba(255,255,255,0.5);
-}
-
 #usermemes{
     margin: 0 auto;
+    max-width: 1180px;
 }
