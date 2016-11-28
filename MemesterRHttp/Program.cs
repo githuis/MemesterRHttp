@@ -38,6 +38,13 @@ namespace MemesterRHttp
                 res.Redirect("/meme/" + meme.OrgId);
             });
 
+            server.Get("/*", (req, res) =>
+            {
+                var m = rand.Next(0, dict.Count);
+                var meme = dict.ElementAt(m).Value;
+                res.Redirect("/meme/" + meme.OrgId);
+            });
+
             server.Get("/instameme", (req, res) =>
             {
                 var m = rand.Next(0, dict.Count);
@@ -68,6 +75,11 @@ namespace MemesterRHttp
                     {"thumb", meme.WebThumb}
                 };
                 res.RenderPage("pages/index.ecs", rp);
+            });
+
+            server.Get("/user/:user", (req, res) =>
+            {
+                res.RenderPage("pages/acc/account.ecs", null);
             });
 
             server.Get("/user/:user/liked", (req, res) =>
@@ -187,6 +199,16 @@ namespace MemesterRHttp
                 dict.TryRemove(m, out meme);
                 File.Delete(meme.Path);
                 File.Delete(meme.Thumb);
+            });
+
+            server.Get("/threads/:thread", (req, res) =>
+            {
+                var tid = req.Params["thread"];
+                var pars = new RenderParams
+                {
+                    {"thread", tid }
+                };
+                res.RenderPage("pages/thr/thread.ecs", pars);
             });
 
             server.Post("/threads/:thread", (req, res) =>
