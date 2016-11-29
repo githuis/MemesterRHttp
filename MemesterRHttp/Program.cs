@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using RHttpServer;
 using RHttpServer.Plugins;
 using RHttpServer.Plugins.Default;
@@ -21,7 +22,7 @@ namespace MemesterRHttp
         static void Main(string[] args)
         {
             var server = new HttpServer(5000, 3, "./public", true) { CachePublicFiles = true };
-            var db = new SimpleSQLiteDatatase("memes.db");
+            var db = new SimpleSQLiteDatatase("db.sqlite");
             db.CreateTable<Meme>();
             db.CreateTable<User>();
             var dict = LoadMemes(db.GetTable<Meme>());
@@ -33,14 +34,14 @@ namespace MemesterRHttp
 
             server.Get("/", (req, res) =>
             {
-                var m = rand.Next(0, dict.Count);
+                var m = rand.Next(0, dict.Count - 1);
                 var meme = dict.ElementAt(m).Value;
                 res.Redirect("/meme/" + meme.OrgId);
             });
 
             server.Get("/*", (req, res) =>
             {
-                var m = rand.Next(0, dict.Count);
+                var m = rand.Next(0, dict.Count - 1);
                 var meme = dict.ElementAt(m).Value;
                 res.Redirect("/meme/" + meme.OrgId);
             });
@@ -50,6 +51,28 @@ namespace MemesterRHttp
                 var m = rand.Next(0, dict.Count);
                 var meme = dict.ElementAt(m).Value;
                 res.Redirect(meme.WebPath);
+            });
+
+            server.Get("/user/:user", (req, res) =>
+            {
+                res.RenderPage("pages/acc/account.ecs", null);
+            });
+
+            server.Get("/user/:user/liked", (req, res) =>
+            {
+                var user = req.Params["user"];
+                var items = req.Queries["p"];
+                if (string.IsNullOrEmpty(items)) items = "1";
+                var u = db.Get<User>(user);
+                int i;
+                if (u == null || !int.TryParse(items, out i))
+                {
+                    res.SendString("no");
+                    return;
+                }
+
+                var liked = u.Votes.Keys.Skip(i - 1 * 20).Take(20);
+                res.SendJson(liked);
             });
 
             server.Get("/meme/:meme", (req, res) =>
@@ -75,28 +98,6 @@ namespace MemesterRHttp
                     {"thumb", meme.WebThumb}
                 };
                 res.RenderPage("pages/index.ecs", rp);
-            });
-
-            server.Get("/user/:user", (req, res) =>
-            {
-                res.RenderPage("pages/acc/account.ecs", null);
-            });
-
-            server.Get("/user/:user/liked", (req, res) =>
-            {
-                var user = req.Params["user"];
-                var items = req.Queries["p"];
-                if (string.IsNullOrEmpty(items)) items = "1";
-                var u = db.Get<User>(user);
-                int i;
-                if (u == null || !int.TryParse(items, out i))
-                {
-                    res.SendString("no");
-                    return;
-                }
-
-                var liked = u.Votes.Keys.Skip(i - 1 * 20).Take(20);
-                res.SendJson(liked);
             });
 
             server.Post("/meme/:meme/vote", (req, res) =>
@@ -201,9 +202,10 @@ namespace MemesterRHttp
                 File.Delete(meme.Thumb);
             });
 
-            server.Get("/threads/:thread", (req, res) =>
+            server.Get("/thread/:thread", (req, res) =>
             {
                 var tid = req.Params["thread"];
+                tid = HttpUtility.UrlDecode(tid);
                 var pars = new RenderParams
                 {
                     {"thread", tid }
@@ -211,10 +213,11 @@ namespace MemesterRHttp
                 res.RenderPage("pages/thr/thread.ecs", pars);
             });
 
-            server.Post("/threads/:thread", (req, res) =>
+            server.Post("/thread/:thread", (req, res) =>
             {
                 var tid = req.Params["thread"];
-                var memes = db.Find<Meme>(m => m.Thread == tid);
+                tid = HttpUtility.UrlDecode(tid);
+                var memes = db.Find<Meme>(m => m.Thread == tid).Select(m => m.OrgId);
                 res.SendJson(memes);
             });
 

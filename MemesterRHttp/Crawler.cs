@@ -2,8 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Fizzler.Systems.HtmlAgilityPack;
 using Frapper;
 using RHttpServer.Plugins.External;
 
@@ -54,23 +56,32 @@ namespace MemesterRHttp
             var html = wc.DownloadString("http://boards.4chan.org/wsg/");
             var doc = new HtmlAgilityPack.HtmlDocument();
             doc.LoadHtml(html);
-            var nodes = doc.DocumentNode.SelectNodes("//div[@class='fileText']/a");
-            foreach (var node in nodes)
+            var threads = doc.DocumentNode.QuerySelectorAll("div.thread").Skip(1);
+            foreach (var node in threads)
             {
-                var th = node.ParentNode.ParentNode.ParentNode.ParentNode.ParentNode.InnerText;
-                th = th.Substring(0, th.IndexOfAny("0123456789".ToCharArray()));
-                if (th.StartsWith("Anonymous")) th = th.Substring(9);
-
-                string id = node.InnerText.Replace(".webm", "").Replace(".gif", "");
-                string re = node.Attributes["href"].Value;
-                if (!re.StartsWith("http")) re = "http:" + re;
-                list.Add(new CMeme
+                var name = node.QuerySelector("span.subject").InnerText;
+                if (string.IsNullOrEmpty(name))
                 {
-                    Title = id,
-                    Url = re,
-                    OrgId = re.Substring(re.LastIndexOf("/") + 1).Replace(".webm", ""),
-                    Thread = th
-            });
+                    name = node.QuerySelector("a.replylink").Attributes["href"].Value.Substring(7);
+                    var i = name.IndexOf("/");
+                    if (i > 0)
+                        name = name.Substring(i + 1);
+                }
+                var files = node.QuerySelectorAll("div.file");
+                foreach (var htmlNode in files)
+                {
+                    var tit = htmlNode.QuerySelector("a").InnerText;
+                    if (tit.Contains("(...)")) tit = htmlNode.QuerySelector("a").Attributes["title"].Value;
+                    var href = htmlNode.QuerySelector("a.fileThumb").Attributes["href"].Value;
+                    if (href.EndsWith(".gif")) continue;
+                    list.Add(new CMeme
+                    {
+                        Thread = name,
+                        Title = tit.Replace(".webm", ""),
+                        Url = "http:" + href,
+                        OrgId = href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", ""),
+                    });
+                }
             }
 
             return list;
@@ -86,7 +97,6 @@ namespace MemesterRHttp
             var m = new Meme
             {
                 OrgId = meme.OrgId,
-                Ext = Path.GetExtension(filename),  
                 Title = meme.Title,
                 Thread = meme.Thread
             };
@@ -97,6 +107,11 @@ namespace MemesterRHttp
         private static void CreateThumb(Meme meme)
         {
             var res = FFMPEG.RunCommand($"-i {meme.Path} -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
+            if (res == "ok") return;
+            else
+            {
+                return;
+            }
         }
     }
 }

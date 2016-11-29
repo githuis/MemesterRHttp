@@ -1,89 +1,89 @@
-*{
-    padding: 0;
-    margin: 0;
-}
+            *{
+                padding: 0;
+                margin: 0;
+            }
 
-body{
-    background-color: #1d1d1d;
-    font-family: 'Raleway', sans-serif;
-}
+            body{
+                background-color: #1d1d1d;
+                font-family: 'Raleway', sans-serif;
+            }
 
-button{
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
-    height: 30px;
-    width: 100px;
-    background: #2e2e2e;
-    color: #dcdcdc;
-    float: right;
-}
+            button{
+                font-family: 'Raleway', sans-serif;
+                font-size: 20px;
+                height: 30px;
+                width: 100px;
+                background: #2e2e2e;
+                color: #dcdcdc;
+                float: right;
+            }
 
-.container > div{
-    padding-top: 100px;
-    margin: auto;
-    width: 405px;
-}
+            .container > div{
+                padding-top: 100px;
+                margin: auto;
+                width: 405px;
+            }
 
-.container > header > div{
-    margin-left: 30%;
-    color: #dcdcdc;
-}
+            .container > header > div{
+                margin-left: 30%;
+                color: #dcdcdc;
+            }
 
-.info {
-    display: inline;
-    float: left;
-    width: 16px;
-    margin-right: 5px;
-}
+            .info {
+                display: inline;
+                float: left;
+                width: 16px;
+                margin-right: 5px;
+            }
 
-.container {
-    height: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
+            .container {
+                height: 100%;
+                display: flex;
+                flex-flow: column nowrap;
+                align-items: center;
 
-}
+            }
 
-.container > header {
-    flex: 0 0 60px;
-    width: 100%;
-    height: 42px;
-    background-color: #2e2e2e;
-    margin-bottom: 42px;
-    font-size: 32px;
-    line-height: 60px;
-}
+            .container > header {
+                flex: 0 0 60px;
+                width: 100%;
+                height: 42px;
+                background-color: #2e2e2e;
+                margin-bottom: 42px;
+                font-size: 32px;
+                line-height: 60px;
+            }
 
-.info > div{
-    width: 20px;
-    color: #dcdcdc;
-    font-size: 20px;
-    line-height: 20px;
-    margin-top: 19px;
-}
+            .info > div{
+                width: 20px;
+                color: #dcdcdc;
+                font-size: 20px;
+                line-height: 20px;
+                margin-top: 19px;
+            }
 
-.form{
-    margin-top: 2px;
-    text-align: center;
-    white-space: nowrap;
-    color: #dcdcdc;
-    font-size: 16px;
-    width: 380px;
-    display: inline;
-    float: right;
-}
+            .form{
+                margin-top: 2px;
+                text-align: center;
+                white-space: nowrap;
+                color: #dcdcdc;
+                font-size: 16px;
+                width: 380px;
+                display: inline;
+                float: right;
+            }
 
-input{
-    margin-top: 10px;
-    width: 380px;
-    border: none;
-    line-height: 30px;
-    border-radius: 2px;
-    font-size: 18px;
-}
+            input{
+                margin-top: 10px;
+                width: 380px;
+                border: none;
+                line-height: 30px;
+                border-radius: 2px;
+                font-size: 18px;
+            }
 
-button{
-    float: right;
-    border: none;
-    margin-top: 10px;
-}
+            button{
+                float: right;
+                border: none;
+                margin-top: 10px;
+            }

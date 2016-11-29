@@ -8,20 +8,19 @@ namespace MemesterRHttp
         [PrimaryKey]
         public string OrgId { get; set; }
         public string Title { get; set; }
-        public string Ext { get; set; }
         public string Thread { get; set; }
         public int Score { get; private set; }
 
         private readonly object _lock = new object();
 
         [Ignore]
-        public string Path => System.IO.Path.Combine("public", "memes", $"{OrgId}{Ext}");
+        public string Path => System.IO.Path.Combine("public", "memes", $"{OrgId}.webm");
         [Ignore]
-        public string WebPath => $"/memes/{OrgId}{Ext}";
+        public string WebPath => $"/memes/{OrgId}.webm";
         [Ignore]
         public string Thumb => System.IO.Path.Combine("public", "thumbs", $"{OrgId}.png");
         [Ignore]
-        public string WebThumb => $"/thumbs/{OrgId}{Ext}";
+        public string WebThumb => $"/thumbs/{OrgId}.png";
 
 
 
