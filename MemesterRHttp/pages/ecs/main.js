@@ -180,8 +180,12 @@
             sessionStorage.setItem("fs", fs);
         });
 
+        $("#accPage").click(function () {
+            location.href = "/user/" + sessionStorage.getItem("usr");
+        });
+
         $("#register").click(function () {
-            location.href = "/pages/register.html";
+            location.href = "/register";
         });
 
         $thread.click(function () {

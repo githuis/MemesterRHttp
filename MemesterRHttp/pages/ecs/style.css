@@ -346,3 +346,7 @@
                 padding-right: 10px;
                 padding-left: 10px;
             }
+
+            .header-bar{
+                display: inline-block;
+            }

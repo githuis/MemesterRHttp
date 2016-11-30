@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <header>
-        <div><a href="/random">Memester.club</a></div>
+        <div onclick="window.location='/';" class="no-sel">Memester.club</div>
     </header>
 </div>
 

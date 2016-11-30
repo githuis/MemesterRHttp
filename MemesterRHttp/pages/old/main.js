@@ -178,7 +178,7 @@ $fsBtn.click(function () {
 });
 
 $("#register").click(function () {
-    location.href = "/pages/register.html";
+    location.href = "/old/register.html";
 });
 
 $thread.click(function () {

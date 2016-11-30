@@ -13,7 +13,8 @@
 <body>
 <div class="container">
     <header>
-        <div>Memester.club
+        <div>
+            <div onclick="window.location='/';" class="no-sel">Memester.club</div>
         </div>
     </header>
     <div>
