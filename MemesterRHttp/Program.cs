@@ -96,7 +96,8 @@ namespace MemesterRHttp
                     {"path", meme.WebPath},
                     {"thread", meme.Thread},
                     {"thumb", meme.WebThumb},
-                    {"orgId", meme.OrgId }
+                    {"orgId", meme.OrgId },
+                    {"memes", dict.Count }
                 };
                 res.RenderPage("pages/index.ecs", rp);
             });
@@ -297,7 +298,7 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            crawler.Start();
+            //crawler.Start();
 
 
             server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(60, 100, 5));
