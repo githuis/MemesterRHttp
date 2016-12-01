@@ -313,4 +313,26 @@ if(isLoggedin()){
     $("#accName").text(sessionStorage.getItem("usr"));
 }
 
+$report.click(function () {
+   $("#report-form").css("display", "block");
+   $("#report").css("display", "none");
+});
 
+$("#submit-report").click(sendRep);
+
+function sendRep() {
+    var reason = $("#report-form select").val();
+    var email = $("#report-email").val();
+    var message = $("#report-message").val();
+    if(reason == "2" && (email == "" || message == "")){
+        alert("please input email and message");
+        return;
+    }
+    $post("/report",{
+            meme: mid, rn: reason, reason: message, email: email
+        },function (data) {
+            if(data == "ok")
+                newMeme();
+        }
+    )
+}
