@@ -79,13 +79,16 @@
                 <button class="fa fa-volume-up" id="muter" aria-hidden="true"></button>
                 <input type="range" class="volume">
                 <button class="hover-btn fs-btn fa fa-expand "></button>
-                <button class="hover-btn copy-button">copy link</button>
+                <button class="hover-btn copy-button no-sel">copy link</button>
                 <button class="hover-btn vote arrow2 up" id="upvote"></button>
                 <button class="hover-btn vote arrow2 down" id="downvote"></button>
             </footer>
             <div class="no-sel" id="report">Report</div>
         </main>
     </div>
-<script><¤pages/main.js¤></script>
+<script>
+     var mid = "<%orgId%>"
+    <¤pages/main.js¤>
+</script>
 </body>
 </html>

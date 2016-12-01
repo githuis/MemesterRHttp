@@ -155,6 +155,19 @@
             window.location.href = "/"
         }
 
+        function toggleFullscreen() {
+            $container.toggleClass('fullscreen');
+            $report.toggleClass("fullscreen");
+            $fsBtn.toggleClass('fa-compress');
+            $fsBtn.toggleClass('fa-compress');
+            var fs = sessionStorage.getItem("fs");
+            if (fs == null || fs == "null" || fs == "mini")
+                fs = "full";
+            else
+                fs = "mini";
+            sessionStorage.setItem("fs", fs);
+        }
+
         // Click handling
 
         $slider.click(function() {
@@ -166,19 +179,7 @@
                 auto = "false";
             sessionStorage.setItem("ap", auto);
         });
-
-        $fsBtn.click(function () {
-            $container.toggleClass('fullscreen');
-            $report.toggleClass("fullscreen");
-            $fsBtn.toggleClass('fa-compress');
-            $fsBtn.toggleClass('fa-compress');
-            var fs = sessionStorage.getItem("fs");
-            if (fs == null || fs == "null" || fs == "mini")
-                fs = "full";
-            else
-                fs = "mini";
-            sessionStorage.setItem("fs", fs);
-        });
+;
 
         $("#accPage").click(function () {
             location.href = "/user/" + sessionStorage.getItem("usr");
@@ -200,12 +201,13 @@
             history.back();
         });
 
+        $fsBtn.click(toggleFullscreen)
         $("#right").click(newMeme);
         $(".copy-button").click(copyToClipboard);
         $("#logout").click(logout);
         $("#login").click(login);
         $playButton.click(playPause);
-        $video.click(playPause);
+        $("#videoDiv").click(playPause);
         $volIcon.click(toggleMute);
         $upvote.click(upvote);
         $downvote.click(downvote);
@@ -288,6 +290,10 @@
                 login();
                 event.preventDefault();
             }
+            else if (event.keyCode == 27 && $container.hasClass("fullscreen")){
+                toggleFullscreen();
+            }
+            alert(event.keyCode + " - " + $container.hasClass("fullscreen"));
         });
 
         $html.mousedown(function () {
