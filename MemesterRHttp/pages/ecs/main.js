@@ -159,7 +159,6 @@
             $container.toggleClass('fullscreen');
             $report.toggleClass("fullscreen");
             $fsBtn.toggleClass('fa-compress');
-            $fsBtn.toggleClass('fa-compress');
             var fs = sessionStorage.getItem("fs");
             if (fs == null || fs == "null" || fs == "mini")
                 fs = "full";
@@ -283,6 +282,11 @@
                         newMeme();
                         event.preventDefault();
                         break;
+                    case 27:
+                        if (sessionStorage.getItem("fs") == "full"){
+                            toggleFullscreen();
+                            event.preventDefault();
+                        }
                 }
             }
             else if (event.keyCode == 13)
@@ -290,10 +294,6 @@
                 login();
                 event.preventDefault();
             }
-            else if (event.keyCode == 27 && $container.hasClass("fullscreen")){
-                toggleFullscreen();
-            }
-            alert(event.keyCode + " - " + $container.hasClass("fullscreen"));
         });
 
         $html.mousedown(function () {

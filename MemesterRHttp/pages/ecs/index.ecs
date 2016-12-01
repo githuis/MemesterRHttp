@@ -87,7 +87,7 @@
         </main>
     </div>
 <script>
-     var mid = "<%orgId%>"
+     var mid = "<%orgId%>";
     <¤pages/main.js¤>
 </script>
 </body>

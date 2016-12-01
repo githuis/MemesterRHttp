@@ -95,7 +95,8 @@ namespace MemesterRHttp
                     {"score", meme.Score},
                     {"path", meme.WebPath},
                     {"thread", meme.Thread},
-                    {"thumb", meme.WebThumb}
+                    {"thumb", meme.WebThumb},
+                    {"orgId", meme.OrgId }
                 };
                 res.RenderPage("pages/index.ecs", rp);
             });
@@ -148,7 +149,7 @@ namespace MemesterRHttp
                 var m = req.Params["meme"];
                 var rn = req.Queries["rn"];
                 var reason = req.Queries["reason"];
-                var uid = req.Queries["uid"];
+                var email = req.Queries["email"];
 
                 if (string.IsNullOrWhiteSpace(rn) || (rn == "4" && string.IsNullOrWhiteSpace(reason)))
                 {
@@ -156,7 +157,7 @@ namespace MemesterRHttp
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(uid)) uid = "$ANON";
+                if (string.IsNullOrWhiteSpace(email)) email = "$ANON";
 
                 int rval;
                 if (!int.TryParse(rn, out rval) || rval < 0 || rval > 4)
@@ -175,7 +176,7 @@ namespace MemesterRHttp
                 // will do for now
                 lock (ReportLock)
                 {
-                    File.AppendAllText("reported.txt", $"{m}\t{uid}{rn}\t{reason}\n");
+                    File.AppendAllText("reported.txt", $"{m}\t{email}{rn}\t{reason}\n");
                 }
                 res.SendString("ok");
             });
