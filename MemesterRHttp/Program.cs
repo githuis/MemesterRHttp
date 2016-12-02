@@ -23,6 +23,7 @@ namespace MemesterRHttp
         {
             var server = new HttpServer(5000, 3, "./public", true) { CachePublicFiles = true };
             var db = new SimpleSQLiteDatatase("db.sqlite");
+            db.DropTable<Meme>();
             db.CreateTable<Meme>();
             db.CreateTable<User>();
             var dict = LoadMemes(db.GetTable<Meme>());
@@ -298,12 +299,10 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            //crawler.Start();
-
-
+            crawler.Start();
+            
             server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(60, 100, 5));
             server.Start(true);
-
         }
 
         private static ConcurrentDictionary<string, Meme> LoadMemes(IEnumerable<Meme> memes)

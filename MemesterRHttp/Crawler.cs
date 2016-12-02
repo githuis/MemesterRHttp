@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using Fizzler.Systems.HtmlAgilityPack;
 using Frapper;
 using RHttpServer.Plugins.External;
@@ -76,7 +77,7 @@ namespace MemesterRHttp
                     if (href.EndsWith(".gif")) continue;
                     list.Add(new CMeme
                     {
-                        Thread = name,
+                        Thread = HttpUtility.HtmlDecode(name).Replace("(...)", ""),
                         Title = tit.Replace(".webm", ""),
                         Url = "http:" + href,
                         OrgId = href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", ""),
