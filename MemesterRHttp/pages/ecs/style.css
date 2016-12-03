@@ -351,3 +351,13 @@
             .header-bar{
                 display: inline-block;
             }
+
+            #report-form{
+                display: none;
+                margin-top: 20px;
+            }
+
+            #report-form select{
+                background-color: #1d1d1d;
+                color: floralwhite;
+            }

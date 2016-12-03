@@ -100,9 +100,6 @@
                     location.reload();
                 }
             });
-            $("#accName").text(username);
-            sessionStorage.setItem("usr",username);
-            location.reload();
         }
 
         function logout() {
@@ -167,6 +164,25 @@
             sessionStorage.setItem("fs", fs);
         }
 
+        function sendReport() {
+            var reason = $("#report-form select").val();
+            var email = $("#report-email").val();
+            var message = $("#report-message").val();
+            if(reason == "2" && (email == "" || message == "")) {
+                alert("please input email and message");
+                return;
+            }
+            $.post("/meme/"+mid+"/report",
+                {
+                    rn: reason,
+                    reason: message,
+                    email: email
+                },function (data) {
+                    if(data == "ok")
+                        newMeme();
+                }
+            )
+        }
         // Click handling
 
         $slider.click(function() {
@@ -178,7 +194,6 @@
                 auto = "false";
             sessionStorage.setItem("ap", auto);
         });
-;
 
         $("#accPage").click(function () {
             location.href = "/user/" + sessionStorage.getItem("usr");
@@ -189,7 +204,6 @@
         });
 
         $thread.click(function () {
-            alert($thread.text());
             window.location.href = "/thread/" + encodeURIComponent($thread.text());
         });
 
@@ -201,7 +215,13 @@
             history.back();
         });
 
-        $fsBtn.click(toggleFullscreen)
+        $report.click(function () {
+            $("#report-form").css("display", "block");
+            $("#report").css("display", "none");
+        });
+
+        $("#submit-report").click(sendReport);
+        $fsBtn.click(toggleFullscreen);
         $("#right").click(newMeme);
         $(".copy-button").click(copyToClipboard);
         $("#logout").click(logout);
@@ -236,7 +256,6 @@
 
         video.onloadedmetadata = function() {
             var time = video.duration;
-            console.log(time);
             var minutes = Math.floor(time / 60);
             var seconds = Math.floor(time - minutes * 60);
             if (seconds.toString().length == 1) seconds = '0' + seconds;

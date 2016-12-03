@@ -16,9 +16,8 @@
                 type: "POST",
                 url: "/register",
                 data: {
-                    usr: usr,
-                    pwd1: pwd1,
-                    pwd2: pwd2
+                    username: usr,
+                    password: pwd1
                 },
                 success: registered,
                 error: notRegistered,
@@ -27,11 +26,15 @@
         }
 
         function registered(data, text, jqXHR){
-            $status.text("Registered!");
+            alert(data);
+            if (data == "ok")
+                $status.text("Registered!");
+            else
+                $status.text("Not registered!");
         }
 
         function notRegistered(jqXHR, status, error) {
-            $status.text("Registered!");
+            $status.text("Not registered!");
         }
 
         function checkInput(usr, pwd1, pwd2) {

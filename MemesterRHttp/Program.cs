@@ -26,6 +26,7 @@ namespace MemesterRHttp
             //db.DropTable<Meme>();
             db.CreateTable<Meme>();
             db.CreateTable<User>();
+            db.CreateTable<Report>();
             var dict = LoadMemes(db.GetTable<Meme>());
 
             var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(200));
@@ -149,11 +150,12 @@ namespace MemesterRHttp
             server.Post("/meme/:meme/report", (req, res) =>
             {
                 var m = req.Params["meme"];
-                var rn = req.Queries["rn"];
-                var reason = req.Queries["reason"];
-                var email = req.Queries["email"];
+                var body = req.GetBodyPostFormData();
+                var rn = body["rn"];
+                var reason = body["reason"];
+                var email = body["email"];
 
-                if (string.IsNullOrWhiteSpace(rn) || (rn == "4" && string.IsNullOrWhiteSpace(reason)))
+                if (string.IsNullOrWhiteSpace(rn) || ((rn == "2" || rn == "4") && string.IsNullOrWhiteSpace(reason)))
                 {
                     res.SendString("no");
                     return;
@@ -174,18 +176,19 @@ namespace MemesterRHttp
                     res.SendString("no");
                     return;
                 }
-                
+                var rr = (Report.ReportReason) rval;
                 // will do for now
                 lock (ReportLock)
                 {
-                    File.AppendAllText("reported.txt", $"{m}\t{email}{rn}\t{reason}\n");
+                    File.AppendAllText("reported.txt", $"{m}\t\t{email}\t\t{rr}\t\t{reason}\n");
                 }
+                db.Insert<Report>(new Report(m, rr, email, reason));
                 res.SendString("ok");
             });
 
             server.Post("/meme/:meme/remove", async (req, res) =>
             {
-                var pass = req.Queries["pass"];
+                var pass = req.Queries["pwd"];
                 var m = req.Params["meme"];
                 var pwd = File.ReadAllText("rmpwd");
 
@@ -221,6 +224,22 @@ namespace MemesterRHttp
                 tid = HttpUtility.UrlDecode(tid);
                 var memes = db.Find<Meme>(m => m.Thread == tid).Select(m => m.OrgId);
                 res.SendJson(memes);
+            });
+
+            server.Post("/reportedmemes", async (req, res) =>
+            {
+                var body = req.GetBodyPostFormData();
+                var pass = body["pwd"];
+                var pwd = File.ReadAllText("rmpwd");
+                if (pass != pwd)
+                {
+                    var r = rand.Next(750, 1500);
+                    await Task.Delay(r);
+                    res.SendString("no");
+                    return;
+                }
+                var reports = db.GetTable<Report>().ToList();
+                res.SendJson(reports);
             });
 
             server.Get("/multimeme", (req, res) =>
@@ -351,14 +370,5 @@ namespace MemesterRHttp
             return 0;
         }
         
-    }
-
-    enum ReportReason
-    {
-        NSFW = 0,
-        Abuse = 1,
-        CopyrightClaim = 2,
-        TooKorean = 3,
-        Other = 4
     }
 }

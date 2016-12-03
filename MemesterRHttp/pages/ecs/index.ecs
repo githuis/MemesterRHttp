@@ -80,6 +80,20 @@
                 <button class="hover-btn vote arrow2 down" id="downvote"></button>
             </footer>
             <div class="no-sel" id="report">Report</div>
+            <div id="report-form">
+                <select name="report reason" id="reason">
+                    <option value="0">Nsfw/porn</option>
+                    <option value="3">Too Korean</option>
+                    <option value="2">copyrighted material</option>
+                    <option value="1">animal abuse</option>
+                    <option value="4">other</option>
+                </select>
+
+                <input type="text" id="report-message" placeholder="optional message">
+                <input type="text" id="report-email" placeholder="optional email">
+
+                <button id="submit-report">submit</button>
+            </div>
         </main>
     </div>
 <script>
