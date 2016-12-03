@@ -28,7 +28,6 @@
         <header>
             <div class="no-sel">
                 <div onclick="window.location='/';" class="no-sel header-bar">Memester.club</div>
-
                 <div class="dropdown">
                     <button id="dropdown-btn"><div class="dropdown-icon"></div></button>
                     <div id="login-div">
@@ -53,11 +52,8 @@
                             <li class="hover-btn" id="accPage">View profile</li>
                             <li class="hover-btn" id="logout">Logout</li>
                         </ul>
-
-
                     </div>
                 </div>
-
             </div>
         </header>
         <main>
@@ -67,17 +63,17 @@
                 <button class="hover-btn arrow1 left" aria-hidden="true" id="left"></button>
             </header>
             <div id="videoDiv">
-                <video src="<%path%>" autoplay>
+                <video src="<%path%>" autoplay="autoplay">
                     It is 2016 and your browser's still not down with a little webm
                 </video>
             </div>
             <footer class="player-controls">
                 <button class="hover-btn play fa fa-play"></button>
                 <div class="no-sel time currentTime">0:00</div>
-                <input type="range" class="progress">
+                <input type="range" class="progress"/>
                 <div class="no-sel time totalTime">0:00</div>
                 <button class="fa fa-volume-up" id="muter" aria-hidden="true"></button>
-                <input type="range" class="volume">
+                <input type="range" class="volume"/>
                 <button class="hover-btn fs-btn fa fa-expand "></button>
                 <button class="hover-btn copy-button no-sel">copy link</button>
                 <button class="hover-btn vote arrow2 up" id="upvote"></button>

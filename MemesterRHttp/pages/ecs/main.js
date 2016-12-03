@@ -189,6 +189,7 @@
         });
 
         $thread.click(function () {
+            alert($thread.text());
             window.location.href = "/thread/" + encodeURIComponent($thread.text());
         });
 

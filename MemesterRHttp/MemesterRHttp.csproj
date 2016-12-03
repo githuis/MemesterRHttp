@@ -72,16 +72,16 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RHttpServer, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RHttpServer.1.0.3.7\lib\net452\RHttpServer.dll</HintPath>
+    <Reference Include="RHttpServer, Version=1.0.3.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RHttpServer.1.0.3.8\lib\net452\RHttpServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Text.4.5.0\lib\net45\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SimpleSQLite.RHttpServer, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleSQLite.RHttpServer.1.0.0.2\lib\net45\SimpleSQLite.RHttpServer.dll</HintPath>
+    <Reference Include="SimpleSQLite.RHttpServer, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleSQLite.RHttpServer.1.0.0.3\lib\net45\SimpleSQLite.RHttpServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

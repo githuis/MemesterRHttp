@@ -77,8 +77,8 @@ namespace MemesterRHttp
                     if (href.EndsWith(".gif")) continue;
                     list.Add(new CMeme
                     {
-                        Thread = HttpUtility.HtmlDecode(name).Replace("(...)", ""),
-                        Title = tit.Replace(".webm", ""),
+                        Thread = HttpUtility.HtmlDecode(name).Replace("(...)", "").Replace("#", " ").Replace("/", " "),
+                        Title = HttpUtility.HtmlDecode(tit).Replace(".webm", ""),
                         Url = "http:" + href,
                         OrgId = href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", ""),
                     });
@@ -107,12 +107,8 @@ namespace MemesterRHttp
 
         private static void CreateThumb(Meme meme)
         {
-            var res = FFMPEG.RunCommand($"-i {meme.Path} -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
-            if (res == "ok") return;
-            else
-            {
-                return;
-            }
+            var res = FFMPEG.RunCommand($"-i {meme.Path} -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
+            Console.WriteLine(res);
         }
     }
 }
