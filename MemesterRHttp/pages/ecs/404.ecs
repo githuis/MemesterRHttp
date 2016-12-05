@@ -31,7 +31,7 @@
             </div>
         </header>
         <main>
-            <header><center>404 meme not found</center>
+            <header style="text-align: center">404 meme not found
                 <button class="hover-btn arrow1 right" aria-hidden="true" id="right"></button>
             </header>
             <div id="videoDiv">

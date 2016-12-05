@@ -54,7 +54,7 @@ namespace MemesterRHttp
             server.Get("/instameme", (req, res) =>
             {
                 var m = rand.Next(0, dict.Length);
-                var meme = dict.ElementAt(m).Value;
+                var meme = dict[m];
                 res.Redirect(meme.WebPath);
             });
 

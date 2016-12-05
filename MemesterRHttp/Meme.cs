@@ -10,7 +10,7 @@ namespace MemesterRHttp
         public string Title { get; set; }
         public string Thread { get; set; }
         public int Score { get; private set; }
-
+        
         private readonly object _lock = new object();
 
         [Ignore]
@@ -21,8 +21,6 @@ namespace MemesterRHttp
         public string Thumb => System.IO.Path.Combine("public", "thumbs", $"{OrgId}.png");
         [Ignore]
         public string WebThumb => $"/thumbs/{OrgId}.png";
-
-
 
         public void Vote(int vote)
         {
