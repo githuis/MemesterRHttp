@@ -3,6 +3,7 @@
 
         function addMeme(id) {
             var clone = meme.content.cloneNode(true);
+            console.log(clone);
             clone.querySelector('img').src = "/thumbs/" + id + ".png";
             clone.querySelector('img').onclick = function () {
                 window.location.href = "/meme/" + id;

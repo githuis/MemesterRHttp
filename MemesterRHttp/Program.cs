@@ -182,7 +182,7 @@ namespace MemesterRHttp
                 {
                     File.AppendAllText("reported.txt", $"{m}\t\t{email}\t\t{rr}\t\t{reason}\n");
                 }
-                db.Insert<Report>(new Report(m, rr, email, reason));
+                db.Insert(new Report(m, rr, email, reason));
                 res.SendString("ok");
             });
 
