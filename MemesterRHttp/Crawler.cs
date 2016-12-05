@@ -15,12 +15,12 @@ namespace MemesterRHttp
     class Crawler
     {
         private const string MemePath = "./public/memes";
-        private readonly ConcurrentDictionary<string, Meme> _dict;
+        private readonly MemeDictionary _dict;
         private readonly SimpleSQLiteDatatase _db;
         private readonly TimeSpan _interval;
         private static readonly FFMPEG FFMPEG = new FFMPEG("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
 
-        public Crawler(ConcurrentDictionary<string, Meme> dict, SimpleSQLiteDatatase db, TimeSpan interval)
+        public Crawler(MemeDictionary dict, SimpleSQLiteDatatase db, TimeSpan interval)
         {
             _dict = dict;
             _db = db;
@@ -43,9 +43,9 @@ namespace MemesterRHttp
         
         private void CheckIfExists(CMeme cmeme)
         {
-            if (_dict.ContainsKey(cmeme.OrgId) || cmeme.Url.EndsWith("gif")) return;
+            if (_dict.Contains(cmeme.OrgId) || cmeme.Url.EndsWith("gif")) return;
             var meme = DownloadMeme(cmeme);
-            _dict.TryAdd(meme.OrgId, meme);
+            _dict.Add(meme);
             _db.Insert(meme);
         }
 

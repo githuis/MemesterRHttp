@@ -36,28 +36,34 @@ namespace MemesterRHttp
 
             server.Get("/", (req, res) =>
             {
-                var m = rand.Next(0, dict.Count - 1);
-                var meme = dict.ElementAt(m).Value;
+                var m = rand.Next(0, dict.Length - 1);
+                var meme = dict[m];
                 res.Redirect("/meme/" + meme.OrgId);
             });
 
             server.Get("/*", (req, res) =>
             {
-                var m = rand.Next(0, dict.Count - 1);
-                var meme = dict.ElementAt(m).Value;
-                res.Redirect("/meme/" + meme.OrgId);
+                res.Redirect("/404");
+            });
+
+            server.Get("/404", (req, res) =>
+            {
+                res.RenderPage("pages/404.ecs", null);
             });
 
             server.Get("/instameme", (req, res) =>
             {
-                var m = rand.Next(0, dict.Count);
+                var m = rand.Next(0, dict.Length);
                 var meme = dict.ElementAt(m).Value;
                 res.Redirect(meme.WebPath);
             });
 
             server.Get("/user/:user", (req, res) =>
             {
-                res.RenderPage("pages/acc/account.ecs", null);
+                var par = new RenderParams();
+                var usr = db.Get<User>(req.Params["user"]);
+                par.Add("memes", usr.Votes.Keys);
+                res.RenderPage("pages/acc/account.ecs", par);
             });
 
             server.Get("/user/:user/liked", (req, res) =>
@@ -99,7 +105,7 @@ namespace MemesterRHttp
                     {"thread", meme.Thread},
                     {"thumb", meme.WebThumb},
                     {"orgId", meme.OrgId },
-                    {"memes", dict.Count }
+                    {"memes", dict.Length }
                 };
                 res.RenderPage("pages/index.ecs", rp);
             });
@@ -202,7 +208,7 @@ namespace MemesterRHttp
                 }
                 await Task.Delay(500);
                 db.Delete<Meme>(meme.OrgId);
-                dict.TryRemove(m, out meme);
+                dict.Remove(meme);
                 File.Delete(meme.Path);
                 File.Delete(meme.Thumb);
             });
@@ -253,13 +259,13 @@ namespace MemesterRHttp
                 if (w > 5) w = 5;
                 var tot = h * w;
                 var limit = tot * 3;
-                var l = dict.Count;
+                var l = dict.Length;
                 if (limit > l) limit = l;
                 var r = new Random();
                 var list = new List<Meme>();
                 for (int i = 0; i < limit; i++)
                 {
-                    list.Add(dict.ElementAt(r.Next(0, l)).Value);
+                    list.Add(dict[r.Next(0, l)]);
                 }
 
                 res.RenderPage("./pages/multimeme.ecs", new RenderParams
@@ -324,13 +330,14 @@ namespace MemesterRHttp
             server.Start(true);
         }
 
-        private static ConcurrentDictionary<string, Meme> LoadMemes(IEnumerable<Meme> memes)
+        private static MemeDictionary LoadMemes(IEnumerable<Meme> memes)
         {
-            var retVal = new ConcurrentDictionary<string, Meme>();
+            var retVal = new MemeDictionary();
             foreach (var meme in memes)
             {
-                retVal.TryAdd(meme.OrgId, meme);
+                retVal.Add(meme);
             }
+
             Console.WriteLine("Memes loaded!");
             return retVal;
         }
@@ -369,6 +376,38 @@ namespace MemesterRHttp
             }
             return 0;
         }
+
+
         
+    }
+
+    class MemeDictionary
+    {
+        private ConcurrentDictionary<string, Meme> _dict = new ConcurrentDictionary<string, Meme>();
+        private List<Meme> _list = new List<Meme>();
+
+        public void Add(Meme meme)
+        {
+            _dict.TryAdd(meme.OrgId, meme);
+            _list.Add(meme);
+        }
+        
+        public void Remove(Meme meme)
+        {
+            Meme m;
+            _dict.TryRemove(meme.OrgId, out m);
+            _list.Remove(meme);
+        }
+
+        public int Length => _list.Count;
+
+        public bool TryGetValue(string id, out Meme meme)
+        {
+            return _dict.TryGetValue(id, out meme);
+        }
+
+        public Meme this[int index] => _list[index];
+
+        public bool Contains(string id) => _dict.ContainsKey(id);
     }
 }
