@@ -92,7 +92,7 @@
                 <input type="text" id="report-message" placeholder="optional message">
                 <input type="text" id="report-email" placeholder="optional email">
 
-                <button id="submit-report">submit</button>
+                <button id="submit-report" class="hover-btn">submit</button>
             </div>
         </main>
     </div>

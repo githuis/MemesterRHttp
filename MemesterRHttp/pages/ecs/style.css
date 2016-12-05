@@ -358,7 +358,19 @@
 
             #report-form{
                 display: none;
+                margin: 0 auto;
                 margin-top: 20px;
+
+            }
+
+            #report-form button{
+                float: inherit;
+                background-color: #2e2e2e;
+            }
+
+            #report-form input{
+                border: 1px solid rgb(169,169,169);
+                color: floralwhite;
             }
 
             #report-form select{
