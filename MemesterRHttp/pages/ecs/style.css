@@ -93,7 +93,7 @@
 
             .time{
                 font-size: 11px;
-                line-height: 30px;
+                line-height: 34px;
                 font-family: 'Comfortaa', cursive;
             }
             .currentTime{
@@ -216,7 +216,6 @@
 
             .player-controls > .progress {
                 flex: 1 1 auto;
-                height: 30px;
             }
 
             .player-controls > .volume {
