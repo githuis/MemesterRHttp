@@ -119,12 +119,12 @@
             {
                 $upvote.addClass("voteSet");
                 $upvote.removeClass("hover-btn");
-                // add vote POST action
+                upDoot(true);
             }
             else {
                 $upvote.removeClass("voteSet");
                 $upvote.addClass("hover-btn");
-                // remove vote POST action
+                upDoot(false);
             }
         }
 
@@ -139,16 +139,46 @@
             {
                 $downvote.addClass("voteSet");
                 $downvote.removeClass("hover-btn");
-                // add vote POST action
+                downDoot(true);
             }
             else {
                 $downvote.removeClass("voteSet");
                 $downvote.addClass("hover-btn");
-                // remove vote POST action
+                downDoot(false);
             }
         }
 
+        function upDoot(set) {
+            $.post(window.location.pathname+"/vote",
+                {
+                    user:sessionStorage.getItem("usr"),
+                    pass:sessionStorage.getItem("pwd"),
+                    vote:set?"1":"0"
+                }, function (data) {
+                    if(data == "ok")
+                        updateVotes(set?"1":"-1");
+                } );
+        }
+
+
+        function downDoot(set) {
+            $.post(window.location.pathname+"/vote",
+                {
+                    user:sessionStorage.getItem("usr"),
+                    pass:sessionStorage.getItem("pwd"),
+                    vote:set?"-1":"0"
+                }, function (data) {
+                    if(data == "ok")
+                        updateVotes(set?"-1":"+1");
+                } )
+        }
+
+        function updateVotes(amount) {
+            $("#votes").innerText = parseInt($("#votes").innerText + amount)
+        }
+
         function newMeme() {
+
             window.location.href = "/"
         }
 
