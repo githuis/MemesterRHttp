@@ -304,12 +304,13 @@ namespace MemesterRHttp
             server.Post("/register", (req, res) =>
             {
                 var data = req.GetBodyPostFormData();
-                if (!data.ContainsKey("username") || !data.ContainsKey("passhash"))
+                if (!data.ContainsKey("username") || !data.ContainsKey("password"))
                     {
                     res.SendString("no");
                     return;
                 }
-                var user = db.Get<User>(data["username"]);
+                var un = data["username"];
+                var user = db.FindOne<User>(u => u.Username == un);
                 if (user != null)
                 {
                     res.SendString("no");
@@ -317,8 +318,8 @@ namespace MemesterRHttp
                 }
                 user = new User
                 {
-                    Username = data["username"],
-                    PassHash = data["passhash"]
+                    Username = un,
+                    PassHash = data["password"]
                 };
                 db.Insert(user);
                 res.SendString("ok");
@@ -326,7 +327,7 @@ namespace MemesterRHttp
 
             //crawler.Start();
 
-            server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(60, 100, 5));
+            server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(2, 6, 5));
             server.Start(true);
         }
 
