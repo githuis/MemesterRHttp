@@ -338,6 +338,9 @@
 
         var vol = sessionStorage.getItem("vol");
         if (vol != null && vol != "null"){
+            if (sessionStorage.getItem("muted") == "true"){
+                video.muted = true;
+            }
             var v = parseInt(vol);
             $volumeSlider.val(v);
             video.volume = v / 100;
