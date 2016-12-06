@@ -368,7 +368,7 @@
 
         var vol = sessionStorage.getItem("vol");
         if (vol != null && vol != "null"){
-            if (sessionStorage.getItem("muted") == "true"){
+            if (sessionStorage.getItem("mute") == "true"){
                 video.muted = true;
             }
             var v = parseInt(vol);
