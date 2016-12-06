@@ -21,7 +21,7 @@ namespace MemesterRHttp
 
         static void Main(string[] args)
         {
-            var server = new HttpServer(5000, 3, "./public", false) { CachePublicFiles = true };
+            var server = new HttpServer(3000, 3, "./public", false) { CachePublicFiles = true };
             var db = new SimpleSQLiteDatatase("db.sqlite");
             db.DropTable<Meme>();
             db.CreateTable<Meme>();
