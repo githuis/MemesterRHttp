@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace MemesterRHttp
@@ -6,6 +8,7 @@ namespace MemesterRHttp
     class FFMpeg
     {
         private readonly string _ffmpeg;
+        private string _cw;
 
         public FFMpeg(string ffmpeg = "ffmpeg")
         {

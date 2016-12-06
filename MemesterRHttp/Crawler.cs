@@ -17,7 +17,7 @@ namespace MemesterRHttp
         private readonly MemeDictionary _dict;
         private readonly SimpleSQLiteDatatase _db;
         private readonly TimeSpan _interval;
-        private static readonly FFMpeg FFMPEG = new FFMpeg("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
+        private static readonly FFMpeg FFMPEG = new FFMpeg("ffmpeg");
         //private static readonly FFMPEG FFMPEG = new FFMPEG();
         //private static readonly FFMPEG FFMPEG = new FFMPEG("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
 
