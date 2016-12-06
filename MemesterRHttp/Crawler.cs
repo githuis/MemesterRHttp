@@ -108,7 +108,7 @@ namespace MemesterRHttp
 
         private static void CreateThumb(Meme meme)
         {
-            var res = FFMPEG.Execute($"-i {meme.Path} -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
+            var res = FFMPEG.Execute($"-i {meme.Path} -y -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
             Console.WriteLine(res);
         }
     }
