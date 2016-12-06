@@ -23,13 +23,13 @@ namespace MemesterRHttp
         {
             var server = new HttpServer(5000, 3, "./public", false) { CachePublicFiles = true };
             var db = new SimpleSQLiteDatatase("db.sqlite");
-            //db.DropTable<Meme>();
+            db.DropTable<Meme>();
             db.CreateTable<Meme>();
             db.CreateTable<User>();
             db.CreateTable<Report>();
             var dict = LoadMemes(db.GetTable<Meme>());
 
-            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(3));
+            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(30));
             server.CachePublicFiles = true;
 
             var rand = new Random();
@@ -325,7 +325,7 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            //crawler.Start();
+            crawler.Start();
 
             server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(2, 6, 5));
             server.Start(true);
