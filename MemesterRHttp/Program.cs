@@ -384,8 +384,8 @@ namespace MemesterRHttp
 
     class MemeDictionary
     {
-        private ConcurrentDictionary<string, Meme> _dict = new ConcurrentDictionary<string, Meme>();
-        private List<Meme> _list = new List<Meme>();
+        private readonly ConcurrentDictionary<string, Meme> _dict = new ConcurrentDictionary<string, Meme>();
+        private readonly List<Meme> _list = new List<Meme>();
 
         public void Add(Meme meme)
         {
