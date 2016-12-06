@@ -18,6 +18,7 @@
         var $fsBtn = $(".fs-btn");
         var $report = $("#report");
         var $thread = $("#thread");
+        var $reportDiv = $("#report-form");
         var changing = false;
 
 
@@ -318,7 +319,7 @@
         });
 
         $html.bind('keydown', function(event) {
-            if (!$usr.is(":focus") && !$pwd.is(':focus')){
+            if (!$usr.is(":focus") && !$pwd.is(':focus') && !$reportDiv.is(':focus'){
                 switch (event.keyCode){
                     case 32:
                         playPause();
@@ -328,6 +329,7 @@
                         history.back();
                         event.preventDefault();
                         break;
+                    case 82:
                     case 39:
                         newMeme();
                         event.preventDefault();
@@ -337,6 +339,11 @@
                             toggleFullscreen();
                             event.preventDefault();
                         }
+                        break;
+                    case 67:
+                        copyToClipboard();
+                        event.preventDefault();
+                        break;
                 }
             }
             else if (event.keyCode == 13)
@@ -350,8 +357,6 @@
             if (!$dropdown.is(":hover") && $dropdown.hasClass('active'))
                 $dropdown.removeClass('active');
         });
-
-
 
 
         // Page loading stuff
