@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,7 +19,8 @@ namespace MemesterRHttp
         private readonly MemeDictionary _dict;
         private readonly SimpleSQLiteDatatase _db;
         private readonly TimeSpan _interval;
-        private static readonly FFMPEG FFMPEG = new FFMPEG("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
+        //private static readonly FFMPEG FFMPEG = new FFMPEG();
+        //private static readonly FFMPEG FFMPEG = new FFMPEG("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
 
         public Crawler(MemeDictionary dict, SimpleSQLiteDatatase db, TimeSpan interval)
         {
@@ -107,8 +109,13 @@ namespace MemesterRHttp
 
         private static void CreateThumb(Meme meme)
         {
-            var res = FFMPEG.RunCommand($"-i {meme.Path} -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
-            Console.WriteLine(res);
+            ProcessStartInfo p = new ProcessStartInfo("ffmpeg",
+                $"-i {meme.Path} -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
+            p.UseShellExecute = false;
+            Process.Start(p);
+
+            //var res = FFMPEG.RunCommand($"-i {meme.Path} -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
+            //Console.WriteLine(res);
         }
     }
 }
