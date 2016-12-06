@@ -327,7 +327,7 @@ namespace MemesterRHttp
 
             crawler.Start();
 
-            server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(1, 100, 5));
+            //server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(1, 100, 5));
             server.Start();
         }
 
