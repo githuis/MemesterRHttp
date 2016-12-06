@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MemesterRHttp
 {
@@ -12,7 +14,7 @@ namespace MemesterRHttp
             _ffmpeg = ffmpeg;
         }
 
-        public string Execute(string command, int maxWaitTimeMs = 2000)
+        public async Task<string> Execute(string command, int maxWaitTimeMs = 2000)
         {
             var sb = new StringBuilder();
             ProcessStartInfo p = new ProcessStartInfo(_ffmpeg, command)
@@ -27,10 +29,19 @@ namespace MemesterRHttp
             {
                 sb.Append(args.Data);
             };
-            
-            var done = proc.WaitForExit(maxWaitTimeMs);
-            if (!done) sb.Append($"Waited more than {maxWaitTimeMs}ms, aborted");
+            await WaitForExitAsync(proc, CancellationToken.None);
             return sb.ToString();
+        }
+
+        public static Task WaitForExitAsync(Process process, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var tcs = new TaskCompletionSource<object>();
+            process.EnableRaisingEvents = true;
+            process.Exited += (sender, args) => tcs.TrySetResult(null);
+            if (cancellationToken != default(CancellationToken))
+                cancellationToken.Register(tcs.SetCanceled);
+
+            return tcs.Task;
         }
     }
 }
