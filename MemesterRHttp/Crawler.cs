@@ -17,8 +17,8 @@ namespace MemesterRHttp
         private readonly MemeDictionary _dict;
         private readonly SimpleSQLiteDatatase _db;
         private readonly TimeSpan _interval;
-        //private static readonly FFMpeg FFMPEG = new FFMpeg("ffmpeg");
-        private static readonly FFMpeg FFMPEG = new FFMpeg("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
+        private static readonly FFMpeg FFMPEG = new FFMpeg("ffmpeg");
+        //private static readonly FFMpeg FFMPEG = new FFMpeg("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
 
         public Crawler(MemeDictionary dict, SimpleSQLiteDatatase db, TimeSpan interval)
         {
@@ -34,6 +34,7 @@ namespace MemesterRHttp
                 while (true)
                 {
                     var memes = Crawl();
+                    Console.WriteLine("Started downloading");
                     Parallel.ForEach(memes, CheckIfExists);
                     Console.WriteLine("Done downloading for now");
                     await Task.Delay(_interval);
@@ -69,7 +70,6 @@ namespace MemesterRHttp
                     var split = name.Split('/');
                     tid = split[0];
                     name = split[1];
-                    var i = name.IndexOf("/");
                 }
                 var files = node.QuerySelectorAll("div.file");
                 foreach (var htmlNode in files)

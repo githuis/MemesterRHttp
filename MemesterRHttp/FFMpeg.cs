@@ -32,7 +32,7 @@ namespace MemesterRHttp
             {
                 sb.Append(args.Data);
             };
-            proc.WaitForExit(3000);
+            proc.WaitForExit(maxWaitTimeMs);
             return sb.ToString();
         }
         
