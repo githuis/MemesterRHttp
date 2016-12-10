@@ -6,9 +6,10 @@ namespace MemesterRHttp
     class Meme
     {
         [PrimaryKey]
-        public string OrgId { get; set; }
+        public long OrgId { get; set; }
         public string Title { get; set; }
-        public string Thread { get; set; }
+        public long ThreadId { get; set; }
+        public string ThreadName { get; set; }
         public int Score { get; private set; }
         
         private readonly object _lock = new object();
@@ -21,6 +22,7 @@ namespace MemesterRHttp
         public string Thumb => System.IO.Path.Combine("public", "thumbs", $"{OrgId}.png");
         [Ignore]
         public string WebThumb => $"/thumbs/{OrgId}.png";
+
 
         public void Vote(int vote)
         {

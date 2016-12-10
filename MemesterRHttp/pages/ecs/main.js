@@ -19,8 +19,23 @@
         var $report = $("#report");
         var $thread = $("#thread");
         var $reportDiv = $("#report-form");
+        var $reason = $("#report-form select");
+        var $email = $("#report-email");
+        var $message = $("#report-message");
         var changing = false;
 
+
+        String.prototype.hashCode = function() {
+            var hash = 0;
+            var len = this.length;
+            if (len == 0) return hash;
+            for (var i = 0; i < len; i++){
+                var ch = this.charCodeAt(i);
+                hash = ((hash<<5)-hash)+ch;
+                hash = hash & hash;
+            }
+            return hash;
+        };
 
         // Functions
 
@@ -87,16 +102,21 @@
 
         function isLoggedin() {
             var ss = sessionStorage.getItem("usr");
-            return !(ss == null || ss == "null" || ss == "");
+            if (!(ss == null || ss == "null" || ss == ""))
+                return false;
+            ss = sessionStorage.getItem("pwd");
+            return ss == null || ss == "null" || ss == "";
+
         }
 
         function login() {
             var username = $usr.val();
-            var password = $pwd.val();
+            var password = $pwd.val().hashCode();
             $.post("/login",{usr:username,pwd:password},function(data){
                 if(data == "ok")
                 {
                     sessionStorage.setItem("usr",username);
+                    sessionStorage.setItem("pwd",password);
                     $("#accName").text(username);
                     location.reload();
                 }
@@ -106,6 +126,8 @@
         function logout() {
             localStorage.setItem("usr","");
             sessionStorage.setItem("usr","");
+            localStorage.setItem("pwd","");
+            sessionStorage.setItem("pwd","");
             location.reload();
         }
 
@@ -196,11 +218,15 @@
         }
 
         function sendReport() {
-            var reason = $("#report-form select").val();
-            var email = $("#report-email").val();
-            var message = $("#report-message").val();
+            var reason = $reason.val();
+            var email = $email.val();
+            var message = $message.val();
             if(reason == "2" && (email == "" || message == "")) {
-                alert("please input email and message");
+                alert("Please input email and message");
+                return;
+            }
+            if(reason == "4" && message == "") {
+                alert("Please input message");
                 return;
             }
             $.post("/meme/"+mid+"/report",
@@ -235,7 +261,7 @@
         });
 
         $thread.click(function () {
-            window.location.href = "/thread/" + encodeURIComponent($thread.text());
+            window.location.href = "/thread/" + tid;
         });
 
         $button.click(function() {
@@ -319,7 +345,7 @@
         });
 
         $html.bind('keydown', function(event) {
-            if (!$usr.is(":focus") && !$pwd.is(':focus') && !$reportDiv.is(':focus'){
+            if (!$usr.is(":focus") && !$pwd.is(':focus') && !$reason.is(":focus") && !$email.is(":focus") && !$message.is(":focus")){
                 switch (event.keyCode){
                     case 32:
                         playPause();
@@ -373,22 +399,26 @@
 
         var vol = sessionStorage.getItem("vol");
         if (vol != null && vol != "null"){
-            if (sessionStorage.getItem("mute") == "true"){
-                video.muted = true;
-            }
             var v = parseInt(vol);
             $volumeSlider.val(v);
             video.volume = v / 100;
+            if (sessionStorage.getItem("mute") == "true")
+                video.muted = true;
             setVolIcon(v);
         }
+        else
+            $volumeSlider.val(video.volume * 100);
 
         $progress.val(0);
-        $volumeSlider.val(video.volume * 100);
 
         if(isLoggedin()){
             $("#account-div").css("display", "block");
             $("#login-div").css("display", "none");
             $("#accName").text(sessionStorage.getItem("usr"));
+        }
+        else{
+            $upvote.css("display", "none");
+            $downvote.css("display", "none");
         }
 
 

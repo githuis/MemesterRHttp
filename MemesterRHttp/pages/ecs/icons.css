@@ -208,7 +208,6 @@
                 border-radius: 16px;
                 background: #fcfcff;
                 cursor: pointer;
-                height: 2px;
             }
             input[type=range]:focus::-ms-fill-lower {
                 background: #fcfcff;

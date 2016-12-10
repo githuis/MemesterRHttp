@@ -60,13 +60,16 @@ namespace MemesterRHttp
             var threads = doc.DocumentNode.QuerySelectorAll("div.thread").Skip(1);
             foreach (var node in threads)
             {
+                var tid = "";
                 var name = node.QuerySelector("span.subject").InnerText;
                 if (string.IsNullOrEmpty(name))
                 {
-                    name = node.QuerySelector("a.replylink").Attributes["href"].Value.Substring(7);
+                    var tt = node.QuerySelector("a.replylink");
+                    name = tt.Attributes["href"].Value.Substring(7);
+                    var split = name.Split('/');
+                    tid = split[0];
+                    name = split[1];
                     var i = name.IndexOf("/");
-                    if (i > 0)
-                        name = name.Substring(i + 1);
                 }
                 var files = node.QuerySelectorAll("div.file");
                 foreach (var htmlNode in files)
@@ -77,10 +80,11 @@ namespace MemesterRHttp
                     if (href.EndsWith(".gif")) continue;
                     list.Add(new CMeme
                     {
-                        Thread = HttpUtility.HtmlDecode(name).Replace("(...)", "").Replace("#", " ").Replace("/", " "),
+                        Thread = HttpUtility.HtmlDecode(name).Replace("(...)", ""),
+                        ThreadId = long.Parse(tid),
                         Title = HttpUtility.HtmlDecode(tit).Replace(".webm", ""),
                         Url = "http:" + href,
-                        OrgId = href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", ""),
+                        OrgId = long.Parse(href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", "")),
                     });
                 }
             }
@@ -99,7 +103,8 @@ namespace MemesterRHttp
             {
                 OrgId = meme.OrgId,
                 Title = meme.Title,
-                Thread = meme.Thread
+                ThreadName = meme.Thread,
+                ThreadId = meme.Thread
             };
             CreateThumb(m);
             return m;

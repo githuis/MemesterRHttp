@@ -82,33 +82,32 @@
             <div class="no-sel" id="report">Report</div>
             <div id="report-form">
                 <select name="report reason" id="reason">
-                    <option value="0">Nsfw/porn</option>
-                    <option value="3">Too Korean</option>
-                    <option value="2">copyrighted material</option>
-                    <option value="1">animal abuse</option>
-                    <option value="4">other</option>
+                    <option value="0">NSFW/porn</option>
+                    <option value="3">Too korean</option>
+                    <option value="2">Copyrighted material</option>
+                    <option value="1">Animal abuse</option>
+                    <option value="4">Other (specify)</option>
                 </select>
-
                 <input type="text" id="report-message" placeholder="optional message">
                 <input type="text" id="report-email" placeholder="optional email">
-
                 <button id="submit-report" class="hover-btn">submit</button>
             </div>
         </main>
     </div>
 <script>
- var mid = "<%orgId%>";
+     var mid = "<%orgId%>";
+     var tid = "<%threadId%>";
 
 <¤pages/main.js¤>
 
 
- (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
- ga('create', 'UA-85553953-1', 'auto');
- ga('send', 'pageview');
+    ga('create', 'UA-85553953-1', 'auto');
+    ga('send', 'pageview');
 </script>
 </body>
 </html>

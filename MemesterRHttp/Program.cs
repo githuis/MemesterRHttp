@@ -102,7 +102,8 @@ namespace MemesterRHttp
                     {"title", meme.Title},
                     {"score", meme.Score},
                     {"path", meme.WebPath},
-                    {"thread", meme.Thread},
+                    {"thread", meme.ThreadName},
+                    {"threadId", meme.ThreadId },
                     {"thumb", meme.WebThumb},
                     {"orgId", meme.OrgId },
                     {"memes", dict.Length }
@@ -216,10 +217,18 @@ namespace MemesterRHttp
             server.Get("/thread/:thread", (req, res) =>
             {
                 var tid = req.Params["thread"];
-                tid = HttpUtility.UrlDecode(tid);
+                int t = 0;
+                if (!int.TryParse(tid, out t))
+                {
+                    res.Redirect("/404");
+                    return;
+                }
+                var th = db.FindOne<Meme>(m => m.ThreadId == t);
+                
                 var pars = new RenderParams
                 {
-                    {"thread", tid }
+                    {"thread", tid},
+                    {"threadname", th.ThreadName}
                 };
                 res.RenderPage("pages/thr/thread.ecs", pars);
             });
@@ -227,8 +236,13 @@ namespace MemesterRHttp
             server.Post("/thread/:thread", (req, res) =>
             {
                 var tid = req.Params["thread"];
-                tid = HttpUtility.UrlDecode(tid);
-                var memes = db.Find<Meme>(m => m.Thread == tid).Select(m => m.OrgId);
+                int t = 0;
+                if (!int.TryParse(tid, out t))
+                {
+                    res.Redirect("/404");
+                    return;
+                }
+                var memes = db.Find<Meme>(m => m.ThreadId == t).Select(m => m.OrgId);
                 res.SendJson(memes);
             });
 
@@ -328,7 +342,7 @@ namespace MemesterRHttp
             crawler.Start();
 
             //server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(1, 100, 5));
-            server.Start();
+            server.Start(true);
         }
 
         private static MemeDictionary LoadMemes(IEnumerable<Meme> memes)

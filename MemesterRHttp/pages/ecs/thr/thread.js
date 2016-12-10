@@ -12,7 +12,7 @@
         }
 
         function getMemes() {
-            $.post("/thread/"+encodeURIComponent(tId),function (data) {
+            $.post("/thread/"+tId,function (data) {
                 console.log(data != "no");
                 if(data != "no"){
                     for(i=0;i<data.length;i++)
