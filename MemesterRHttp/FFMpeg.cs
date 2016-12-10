@@ -17,7 +17,7 @@ namespace MemesterRHttp
             _ffmpeg = ffmpeg;
         }
 
-        public async Task<string> Execute(string command, int maxWaitTimeMs = 2000)
+        public string Execute(string command, int maxWaitTimeMs = 2000)
         {
             var sb = new StringBuilder();
             ProcessStartInfo p = new ProcessStartInfo(_ffmpeg, command)
@@ -32,19 +32,9 @@ namespace MemesterRHttp
             {
                 sb.Append(args.Data);
             };
-            await WaitForExitAsync(proc, CancellationToken.None);
+            proc.WaitForExit(3000);
             return sb.ToString();
         }
-
-        public static Task WaitForExitAsync(Process process, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var tcs = new TaskCompletionSource<object>();
-            process.EnableRaisingEvents = true;
-            process.Exited += (sender, args) => tcs.TrySetResult(null);
-            if (cancellationToken != default(CancellationToken))
-                cancellationToken.Register(tcs.SetCanceled);
-
-            return tcs.Task;
-        }
+        
     }
 }
