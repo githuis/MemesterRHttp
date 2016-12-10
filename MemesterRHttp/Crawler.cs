@@ -104,7 +104,7 @@ namespace MemesterRHttp
                 OrgId = meme.OrgId,
                 Title = meme.Title,
                 ThreadName = meme.Thread,
-                ThreadId = meme.Thread
+                ThreadId = long.Parse(meme.Thread)
             };
             CreateThumb(m);
             return m;

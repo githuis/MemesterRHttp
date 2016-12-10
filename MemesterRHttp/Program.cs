@@ -86,13 +86,19 @@ namespace MemesterRHttp
             server.Get("/meme/:meme", (req, res) =>
             {
                 var memeid = req.Params["meme"];
+                long mm = 0;
+                if (!long.TryParse(memeid, out mm))
+                {
+                    res.SendString("no");
+                    return;
+                }
                 if (string.IsNullOrWhiteSpace(memeid))
                 {
                     res.Redirect("/404");
                     return;
                 }
                 Meme meme;
-                if (!dict.TryGetValue(memeid, out meme))
+                if (!dict.TryGetValue(mm, out meme))
                 {
                     res.Redirect("/404");
                     return;
@@ -131,9 +137,15 @@ namespace MemesterRHttp
                     return;
                 }
 
+                long mm = 0;
+                if (!long.TryParse(m, out mm))
+                {
+                    res.SendString("no");
+                    return;
+                }
 
                 Meme meme;
-                if (!dict.TryGetValue(m, out meme))
+                if (!dict.TryGetValue(mm, out meme))
                 {
                     res.SendString("no");
                     return;
@@ -176,9 +188,15 @@ namespace MemesterRHttp
                     res.SendString("no");
                     return;
                 }
-                
+
+                long mm = 0;
+                if (!long.TryParse(m, out mm))
+                {
+                    res.SendString("no");
+                    return;
+                }
                 Meme meme;
-                if (!dict.TryGetValue(m, out meme))
+                if (!dict.TryGetValue(mm, out meme))
                 {
                     res.SendString("no");
                     return;
@@ -198,9 +216,15 @@ namespace MemesterRHttp
                 var pass = req.Queries["pwd"];
                 var m = req.Params["meme"];
                 var pwd = File.ReadAllText("rmpwd");
+                long mm = 0;
+                if (!long.TryParse(m, out mm))
+                {
+                    res.SendString("no");
+                    return;
+                }
 
                 Meme meme;
-                if (pwd != pass || !dict.TryGetValue(m, out meme))
+                if (pwd != pass || !dict.TryGetValue(mm, out meme))
                 {
                     var r = rand.Next(750, 3000);
                     await Task.Delay(r);
@@ -398,7 +422,7 @@ namespace MemesterRHttp
 
     class MemeDictionary
     {
-        private readonly ConcurrentDictionary<string, Meme> _dict = new ConcurrentDictionary<string, Meme>();
+        private readonly ConcurrentDictionary<long, Meme> _dict = new ConcurrentDictionary<long, Meme>();
         private readonly List<Meme> _list = new List<Meme>();
 
         public void Add(Meme meme)
@@ -416,13 +440,13 @@ namespace MemesterRHttp
 
         public int Length => _list.Count;
 
-        public bool TryGetValue(string id, out Meme meme)
+        public bool TryGetValue(long id, out Meme meme)
         {
             return _dict.TryGetValue(id, out meme);
         }
 
         public Meme this[int index] => _list[index];
 
-        public bool Contains(string id) => _dict.ContainsKey(id);
+        public bool Contains(long id) => _dict.ContainsKey(id);
     }
 }
