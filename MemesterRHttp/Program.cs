@@ -63,6 +63,7 @@ namespace MemesterRHttp
                 var par = new RenderParams();
                 var usr = db.Get<User>(req.Params["user"]);
                 par.Add("memes", usr.Votes.Keys);
+                par.Add("total", dict.Length);
                 res.RenderPage("pages/acc/account.ecs", par);
             });
 
@@ -110,9 +111,8 @@ namespace MemesterRHttp
                     {"path", meme.WebPath},
                     {"thread", meme.ThreadName},
                     {"threadId", meme.ThreadId },
-                    {"thumb", meme.WebThumb},
                     {"orgId", meme.OrgId },
-                    {"memes", dict.Length }
+                    {"total", dict.Length }
                 };
                 res.RenderPage("pages/index.ecs", rp);
             });
