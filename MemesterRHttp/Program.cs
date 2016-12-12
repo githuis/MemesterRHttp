@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using RHttpServer;
+using RHttpServer.Logging;
 using RHttpServer.Plugins;
 using RHttpServer.Plugins.Default;
 using RHttpServer.Plugins.External;
@@ -21,7 +21,7 @@ namespace MemesterRHttp
 
         static void Main(string[] args)
         {
-            var server = new HttpServer(3000, 3, "./public", false) { CachePublicFiles = true };
+            var server = new HttpServer(3000, 3, "./public", true) { CachePublicFiles = true };
             var db = new SimpleSQLiteDatatase("db.sqlite");
             //db.DropTable<Meme>();
             db.CreateTable<Meme>();
@@ -29,7 +29,7 @@ namespace MemesterRHttp
             db.CreateTable<Report>();
             var dict = LoadMemes(db.GetTable<Meme>());
 
-            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(30));
+            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(3));
             server.CachePublicFiles = true;
 
             var rand = new Random();
@@ -248,27 +248,29 @@ namespace MemesterRHttp
                     return;
                 }
                 var th = db.FindOne<Meme>(m => m.ThreadId == t);
-                
+                var memes = db.Find<Meme>(m => m.ThreadId == t).Select(m => m.OrgId);
+
                 var pars = new RenderParams
                 {
                     {"thread", tid},
-                    {"threadname", th.ThreadName}
+                    {"threadname", th.ThreadName},
+                    {"memes", memes}
                 };
                 res.RenderPage("pages/thr/thread.ecs", pars);
             });
 
-            server.Post("/thread/:thread", (req, res) =>
-            {
-                var tid = req.Params["thread"];
-                int t = 0;
-                if (!int.TryParse(tid, out t))
-                {
-                    res.Redirect("/404");
-                    return;
-                }
-                var memes = db.Find<Meme>(m => m.ThreadId == t).Select(m => m.OrgId);
-                res.SendJson(memes);
-            });
+            //server.Post("/thread/:thread", (req, res) =>
+            //{
+            //    var tid = req.Params["thread"];
+            //    int t = 0;
+            //    if (!int.TryParse(tid, out t))
+            //    {
+            //        res.Redirect("/404");
+            //        return;
+            //    }
+            //    var memes = db.Find<Meme>(m => m.ThreadId == t).Select(m => m.OrgId);
+            //    res.SendJson(memes);
+            //});
 
             server.Post("/reportedmemes", async (req, res) =>
             {
@@ -342,12 +344,13 @@ namespace MemesterRHttp
             server.Post("/register", (req, res) =>
             {
                 var data = req.GetBodyPostFormData();
-                if (!data.ContainsKey("username") || !data.ContainsKey("password"))
-                    {
+                var un = data["username"];
+                var pw = data["password"];
+                if (un != null|| pw != null)
+                {
                     res.SendString("no");
                     return;
                 }
-                var un = data["username"];
                 var user = db.FindOne<User>(u => u.Username == un);
                 if (user != null)
                 {
@@ -363,10 +366,10 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            crawler.Start();
-
-            //server.InitializeDefaultPlugins(true, true, new SimpleHttpSecuritySettings(1, 100, 5));
-            server.Start();
+            //crawler.Start();
+            
+            Logger.Configure(LoggingOption.File, true, "LOG.txt");
+            server.Start(true);
         }
 
         private static MemeDictionary LoadMemes(IEnumerable<Meme> memes)
@@ -418,35 +421,5 @@ namespace MemesterRHttp
 
 
         
-    }
-
-    class MemeDictionary
-    {
-        private readonly ConcurrentDictionary<long, Meme> _dict = new ConcurrentDictionary<long, Meme>();
-        private readonly List<Meme> _list = new List<Meme>();
-
-        public void Add(Meme meme)
-        {
-            _dict.TryAdd(meme.OrgId, meme);
-            _list.Add(meme);
-        }
-        
-        public void Remove(Meme meme)
-        {
-            Meme m;
-            _dict.TryRemove(meme.OrgId, out m);
-            _list.Remove(meme);
-        }
-
-        public int Length => _list.Count;
-
-        public bool TryGetValue(long id, out Meme meme)
-        {
-            return _dict.TryGetValue(id, out meme);
-        }
-
-        public Meme this[int index] => _list[index];
-
-        public bool Contains(long id) => _dict.ContainsKey(id);
     }
 }

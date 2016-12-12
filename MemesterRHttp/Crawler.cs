@@ -33,8 +33,8 @@ namespace MemesterRHttp
             {
                 while (true)
                 {
-                    var memes = Crawl();
                     Console.WriteLine("Started downloading");
+                    var memes = Crawl();
                     Parallel.ForEach(memes, CheckIfExists);
                     Console.WriteLine("Done downloading for now");
                     await Task.Delay(_interval);
@@ -44,7 +44,7 @@ namespace MemesterRHttp
         
         private void CheckIfExists(CMeme cmeme)
         {
-            if (_dict.Contains(cmeme.OrgId) || cmeme.Url.EndsWith("gif")) return;
+            if (_dict.Contains(cmeme) || cmeme.Url.EndsWith("gif")) return;
             var meme = DownloadMeme(cmeme);
             _dict.Add(meme);
             _db.Insert(meme);
@@ -62,12 +62,10 @@ namespace MemesterRHttp
             foreach (var node in threads)
             {
                 var tid = "";
-                var name = node.QuerySelector("span.subject").InnerText;
-                if (string.IsNullOrEmpty(name))
+                var name = "";
+                if (true)
                 {
-                    var tt = node.QuerySelector("a.replylink");
-                    name = tt.Attributes["href"].Value.Substring(7);
-                    var split = name.Split('/');
+                    var split = node.QuerySelector("a.replylink").Attributes["href"].Value.Substring(7).Split('/');
                     tid = split[0];
                     name = split[1];
                 }
@@ -98,13 +96,13 @@ namespace MemesterRHttp
             var filename = meme.Url.Substring(meme.Url.LastIndexOf("/") + 1);
             var filepath = Path.Combine(MemePath, filename);
             var wc = new WebClient();
-            wc.DownloadFile(new Uri(meme.Url), filepath);
+            wc.DownloadFile(meme.Url, filepath);
             var m = new Meme
             {
                 OrgId = meme.OrgId,
                 Title = meme.Title,
                 ThreadName = meme.Thread,
-                ThreadId = long.Parse(meme.Thread)
+                ThreadId = meme.ThreadId
             };
             CreateThumb(m);
             return m;
@@ -112,8 +110,7 @@ namespace MemesterRHttp
 
         private static void CreateThumb(Meme meme)
         {
-            var res = FFMPEG.Execute($"-i {meme.Path} -y -vf scale=-1:180 -ss 00:00:01.435 -f image2 -vframes 1 {meme.Thumb}");
-            Console.WriteLine(res);
+            FFMPEG.Execute($"-i {meme.Path} -vf scale=-1:180 -ss 00:00:00.9 -f image2 -vframes 1 {meme.Thumb} -y");
         }
     }
 }

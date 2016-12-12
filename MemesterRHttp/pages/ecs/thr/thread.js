@@ -12,12 +12,15 @@
         }
 
         function getMemes() {
-            $.post("/thread/"+tId,function (data) {
-                console.log(data != "no");
-                if(data != "no"){
-                    for(i=0;i<data.length;i++)
-                    addMeme(data[i]);
-                }
-            })
+            for (var i = 0; i < threads.length; i++){
+                addMeme(threads[i]);
+            }
+            // $.post("/thread/"+tId,function (data) {
+            //     console.log(data != "no");
+            //     if(data != "no"){
+            //         for(i=0;i<data.length;i++)
+            //         addMeme(data[i]);
+            //     }
+            // })
         }
         getMemes();
