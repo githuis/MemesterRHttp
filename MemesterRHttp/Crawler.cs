@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Fizzler.Systems.HtmlAgilityPack;
@@ -17,6 +18,7 @@ namespace MemesterRHttp
         private readonly MemeDictionary _dict;
         private readonly SimpleSQLiteDatatase _db;
         private readonly TimeSpan _interval;
+        private readonly Thread _thread;
         private static readonly FFMpeg FFMPEG = new FFMpeg("ffmpeg");
         //private static readonly FFMpeg FFMPEG = new FFMpeg("C:\\ffmpeg-3.2-win64-shared\\bin\\ffmpeg.exe");
 
@@ -25,13 +27,19 @@ namespace MemesterRHttp
             _dict = dict;
             _db = db;
             _interval = interval;
+            _thread = new Thread(InternalCrwalerLoop);
         }
 
         public void Start()
         {
-            Task.Run(async () =>
+            _thread.Start();
+        }
+
+        private async void InternalCrwalerLoop()
+        {
+            while (true)
             {
-                while (true)
+                try
                 {
                     Console.WriteLine("Started downloading");
                     var memes = Crawl();
@@ -39,7 +47,11 @@ namespace MemesterRHttp
                     Console.WriteLine("Done downloading for now");
                     await Task.Delay(_interval);
                 }
-            });
+                catch (Exception)
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(10));
+                }
+            }
         }
         
         private void CheckIfExists(CMeme cmeme)
@@ -110,7 +122,7 @@ namespace MemesterRHttp
 
         private static void CreateThumb(Meme meme)
         {
-            FFMPEG.Execute($"-i {meme.Path} -vf scale=-1:180 -ss 00:00:00.9 -f image2 -vframes 1 {meme.Thumb} -y");
+            FFMPEG.ExecuteAsync($"-hide_banner -loglevel panic -i {meme.Path} -vf scale=-1:180 -ss 00:00:00.9 -f image2 -vframes 1 {meme.Thumb} -y");
         }
     }
 }

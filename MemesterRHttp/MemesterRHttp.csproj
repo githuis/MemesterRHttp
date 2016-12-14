@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="CMeme.cs" />
     <Compile Include="Crawler.cs" />
+    <Compile Include="FastRandom.cs" />
     <Compile Include="FFMpeg.cs" />
     <Compile Include="Meme.cs" />
     <Compile Include="MemeDictionary.cs" />

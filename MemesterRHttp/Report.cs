@@ -1,5 +1,8 @@
-﻿namespace MemesterRHttp
+﻿using SQLite;
+
+namespace MemesterRHttp
 {
+    [Table("Reports")]
     class Report
     {
         public Report()

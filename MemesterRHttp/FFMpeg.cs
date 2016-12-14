@@ -10,30 +10,43 @@ namespace MemesterRHttp
     class FFMpeg
     {
         private readonly string _ffmpeg;
-        private string _cw;
 
         public FFMpeg(string ffmpeg = "ffmpeg")
         {
             _ffmpeg = ffmpeg;
         }
 
-        public string Execute(string command, int maxWaitTimeMs = 2000)
+        public Task<string> ExecuteAsync(string command)
         {
+            var tcs = new TaskCompletionSource<string>();
             var sb = new StringBuilder();
             ProcessStartInfo p = new ProcessStartInfo(_ffmpeg, command)
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true
             };
-            
-            var proc = Process.Start(p);
+
+            var proc = new Process
+            {
+                StartInfo = p,
+                EnableRaisingEvents = true
+            };
+            proc.Exited += (sender, args) =>
+            {
+                tcs.TrySetResult(sb.ToString());
+            };
             proc.OutputDataReceived += (sender, args) =>
             {
                 sb.Append(args.Data);
             };
-            proc.WaitForExit(maxWaitTimeMs);
-            return sb.ToString();
+            proc.ErrorDataReceived += (sender, args) =>
+            {
+                sb.Append(args.Data);
+            };
+            proc.Start();
+            return tcs.Task;
         }
         
     }

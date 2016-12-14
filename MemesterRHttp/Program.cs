@@ -21,9 +21,8 @@ namespace MemesterRHttp
 
         static void Main(string[] args)
         {
-            var server = new HttpServer(3000, 3, "./public", true) { CachePublicFiles = true };
+            var server = new HttpServer(3000, 3, "./public", true) {CachePublicFiles = true};
             var db = new SimpleSQLiteDatatase("db.sqlite");
-            //db.DropTable<Meme>();
             db.CreateTable<Meme>();
             db.CreateTable<User>();
             db.CreateTable<Report>();
@@ -32,7 +31,7 @@ namespace MemesterRHttp
             var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(3));
             server.CachePublicFiles = true;
 
-            var rand = new Random();
+            var rand = new FastRandom();
 
             server.Get("/", (req, res) =>
             {
@@ -80,7 +79,7 @@ namespace MemesterRHttp
                     return;
                 }
 
-                var liked = u.Votes.Keys.Skip(i - 1 * 20).Take(20);
+                var liked = u.Votes.Keys.Skip(i - 1*20).Take(20);
                 res.SendJson(liked);
             });
 
@@ -89,11 +88,6 @@ namespace MemesterRHttp
                 var memeid = req.Params["meme"];
                 long mm = 0;
                 if (!long.TryParse(memeid, out mm))
-                {
-                    res.SendString("no");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(memeid))
                 {
                     res.Redirect("/404");
                     return;
@@ -110,9 +104,9 @@ namespace MemesterRHttp
                     {"score", meme.Score},
                     {"path", meme.WebPath},
                     {"thread", meme.ThreadName},
-                    {"threadId", meme.ThreadId },
-                    {"orgId", meme.OrgId },
-                    {"total", dict.Length }
+                    {"threadId", meme.ThreadId},
+                    {"orgId", meme.OrgId},
+                    {"total", dict.Length}
                 };
                 res.RenderPage("pages/index.ecs", rp);
             });
@@ -125,7 +119,8 @@ namespace MemesterRHttp
                 var v = req.Queries["val"];
                 int val;
 
-                if (string.IsNullOrWhiteSpace(u) || string.IsNullOrWhiteSpace(m) || string.IsNullOrWhiteSpace(v) || string.IsNullOrWhiteSpace(p))
+                if (string.IsNullOrWhiteSpace(u) || string.IsNullOrWhiteSpace(m) || string.IsNullOrWhiteSpace(v) ||
+                    string.IsNullOrWhiteSpace(p))
                 {
                     res.SendString("no");
                     return;
@@ -258,20 +253,7 @@ namespace MemesterRHttp
                 };
                 res.RenderPage("pages/thr/thread.ecs", pars);
             });
-
-            //server.Post("/thread/:thread", (req, res) =>
-            //{
-            //    var tid = req.Params["thread"];
-            //    int t = 0;
-            //    if (!int.TryParse(tid, out t))
-            //    {
-            //        res.Redirect("/404");
-            //        return;
-            //    }
-            //    var memes = db.Find<Meme>(m => m.ThreadId == t).Select(m => m.OrgId);
-            //    res.SendJson(memes);
-            //});
-
+            
             server.Post("/reportedmemes", async (req, res) =>
             {
                 var body = req.GetBodyPostFormData();
@@ -291,14 +273,15 @@ namespace MemesterRHttp
             server.Get("/multimeme", (req, res) =>
             {
                 var size = req.Queries["size"];
-                if (string.IsNullOrEmpty(size) || !Regex.IsMatch(size, "[0-9]+x[0-9]+", RegexOptions.Compiled)) size = "3x3";
+                if (string.IsNullOrEmpty(size) || !Regex.IsMatch(size, "[0-9]+x[0-9]+", RegexOptions.Compiled))
+                    size = "3x3";
                 var split = size.Split('x');
                 var h = int.Parse(split[0]);
                 var w = int.Parse(split[1]);
                 if (h > 4) h = 4;
                 if (w > 5) w = 5;
-                var tot = h * w;
-                var limit = tot * 3;
+                var tot = h*w;
+                var limit = tot*3;
                 var l = dict.Length;
                 if (limit > l) limit = l;
                 var r = new Random();
@@ -315,7 +298,7 @@ namespace MemesterRHttp
                     {"m", list}
                 });
             });
-            
+
             server.Post("/login", (req, res) =>
             {
                 var login = req.GetBodyPostFormData();
@@ -346,7 +329,7 @@ namespace MemesterRHttp
                 var data = req.GetBodyPostFormData();
                 var un = data["username"];
                 var pw = data["password"];
-                if (un != null|| pw != null)
+                if (un != null || pw != null)
                 {
                     res.SendString("no");
                     return;
@@ -366,8 +349,8 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            //crawler.Start();
-            
+            crawler.Start();
+
             Logger.Configure(LoggingOption.File, true, "LOG.txt");
             server.Start(true);
         }
@@ -379,11 +362,9 @@ namespace MemesterRHttp
             {
                 retVal.Add(meme);
             }
-
-            Console.WriteLine("Memes loaded!");
             return retVal;
         }
-        
+
         private static int CalcVote(int cv, int nv)
         {
             switch (cv)
@@ -419,7 +400,5 @@ namespace MemesterRHttp
             return 0;
         }
 
-
-        
     }
 }
