@@ -340,6 +340,7 @@
             #thread{
                 text-decoration: underline;
                 cursor: pointer;
+                color: #fcfcff;
             }
 
             .title-bar{

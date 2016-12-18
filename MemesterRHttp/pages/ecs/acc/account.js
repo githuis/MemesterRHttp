@@ -1,6 +1,7 @@
         var meme = document.getElementById("template");
         var $content = $("#usermemes");
         var user = sessionStorage.getItem("usr");
+        var cp
 
         function addMeme(id) {
             var clone = meme.content.cloneNode(true);
@@ -21,17 +22,3 @@
                  }
             })
         }
-
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");
-        addMeme("hej jens", "ldskjnfasd34209p");

@@ -50,12 +50,12 @@
 
 
 
-            .meme > img{
-                max-height: 100%;
+            .meme >  a > img{
+                max-height: 160px;
             }
 
             #content{
-                max-width: 950px;
+                max-width: 1000px;
                 margin: 0 auto;
             }
 

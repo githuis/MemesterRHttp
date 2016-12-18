@@ -3,24 +3,10 @@
 
         function addMeme(id) {
             var clone = meme.content.cloneNode(true);
-            clone.querySelector('img').src = "/thumbs/" + id + ".png";
-            clone.querySelector('img').onclick = function () {
-                window.location.href = "/meme/" + id;
-            };
-
+            clone.querySelector('img').src = "/thumbs/" + id + ".jpg";
+            clone.querySelector('a').href = "/meme/" + id;
             $content.append(clone);
         }
-
-        function getMemes() {
-            for (var i = 0; i < threads.length; i++){
-                addMeme(threads[i]);
-            }
-            // $.post("/thread/"+tId,function (data) {
-            //     console.log(data != "no");
-            //     if(data != "no"){
-            //         for(i=0;i<data.length;i++)
-            //         addMeme(data[i]);
-            //     }
-            // })
+        for (var i = 0; i < threads.length; i++){
+            addMeme(threads[i]);
         }
-        getMemes();

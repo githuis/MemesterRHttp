@@ -21,16 +21,13 @@ namespace MemesterRHttp
 
         static void Main(string[] args)
         {
-            var server = new HttpServer(3000, 3, "./public", true) {CachePublicFiles = true};
+            var server = new HttpServer(3000, 10, "./public", false) {CachePublicFiles = true};
             var db = new SimpleSQLiteDatatase("db.sqlite");
             db.CreateTable<Meme>();
             db.CreateTable<User>();
             db.CreateTable<Report>();
             var dict = LoadMemes(db.GetTable<Meme>());
-
-            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(3));
-            server.CachePublicFiles = true;
-
+            var crawler = new Crawler(dict, db, TimeSpan.FromMinutes(5));
             var rand = new FastRandom();
 
             server.Get("/", (req, res) =>
@@ -54,15 +51,15 @@ namespace MemesterRHttp
             {
                 var m = rand.Next(0, dict.Length);
                 var meme = dict[m];
-                res.Redirect(meme.WebPath);
+                res.SendFile(meme.WebPath);
             });
 
             server.Get("/user/:user", (req, res) =>
             {
-                var par = new RenderParams();
-                var usr = db.Get<User>(req.Params["user"]);
-                par.Add("memes", usr.Votes.Keys);
-                par.Add("total", dict.Length);
+                var par = new RenderParams
+                {
+                    {"total", dict.Length}
+                };
                 res.RenderPage("pages/acc/account.ecs", par);
             });
 
@@ -79,7 +76,7 @@ namespace MemesterRHttp
                     return;
                 }
 
-                var liked = u.Votes.Keys.Skip(i - 1*20).Take(20);
+                var liked = u.Votes.Keys.Skip((i - 1)*20).Take(20);
                 res.SendJson(liked);
             });
 
@@ -113,10 +110,11 @@ namespace MemesterRHttp
 
             server.Post("/meme/:meme/vote", (req, res) =>
             {
-                var u = req.Queries["user"];
-                var p = req.Queries["pass"];
+                var pq = req.GetBodyPostFormData();
+                var u = pq["user"];
+                var p = pq["pass"];
                 var m = req.Params["meme"];
-                var v = req.Queries["val"];
+                var v = pq["val"];
                 int val;
 
                 if (string.IsNullOrWhiteSpace(u) || string.IsNullOrWhiteSpace(m) || string.IsNullOrWhiteSpace(v) ||
@@ -206,7 +204,7 @@ namespace MemesterRHttp
                 res.SendString("ok");
             });
 
-            server.Post("/meme/:meme/remove", async (req, res) =>
+            server.Get("/meme/:meme/remove", async (req, res) =>
             {
                 var pass = req.Queries["pwd"];
                 var m = req.Params["meme"];
@@ -231,6 +229,7 @@ namespace MemesterRHttp
                 dict.Remove(meme);
                 File.Delete(meme.Path);
                 File.Delete(meme.Thumb);
+                res.Redirect("/");
             });
 
             server.Get("/thread/:thread", (req, res) =>
@@ -352,7 +351,7 @@ namespace MemesterRHttp
             crawler.Start();
 
             Logger.Configure(LoggingOption.File, true, "LOG.txt");
-            server.Start(true);
+            server.Start();
         }
 
         private static MemeDictionary LoadMemes(IEnumerable<Meme> memes)

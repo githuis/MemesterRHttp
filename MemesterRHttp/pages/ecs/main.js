@@ -17,7 +17,6 @@
         var $button = $dropdown.find('button');
         var $fsBtn = $(".fs-btn");
         var $report = $("#report");
-        var $thread = $("#thread");
         var $reportDiv = $("#report-form");
         var $reason = $("#report-form select");
         var $email = $("#report-email");
@@ -197,7 +196,7 @@
         }
 
         function updateVotes(amount) {
-            $("#votes").innerText = parseInt($("#votes").innerText + amount)
+            $("#votes").innerText = parseInt($("#votes").innerText )+ amount;
         }
 
         function newMeme() {
@@ -258,10 +257,6 @@
 
         $("#register").click(function () {
             location.href = "/register";
-        });
-
-        $thread.click(function () {
-            window.location.href = "/thread/" + tid;
         });
 
         $button.click(function() {
@@ -417,8 +412,8 @@
             $("#accName").text(sessionStorage.getItem("usr"));
         }
         else{
-            $upvote.css("display", "none");
-            $downvote.css("display", "none");
+            $upvote.hide();
+            $downvote.hide();
         }
 
 

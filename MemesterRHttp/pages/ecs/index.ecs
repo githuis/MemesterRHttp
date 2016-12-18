@@ -57,7 +57,7 @@
             </div>
         </header>
         <main>
-            <header><div id="thread" class="title-bar"><%thread%></div><div class="title-bar no-sel fa fa-angle-right"></div><div class="title-bar"><%title%></div>
+            <header><a id="thread" href="/thread/<%threadId%>" class="title-bar"><%thread%></a><div class="title-bar no-sel fa fa-angle-right"></div><div class="title-bar"><%title%></div>
                 <button class="hover-btn arrow1 right" aria-hidden="true" id="right"></button>
                 <div class="slider"></div>
                 <button class="hover-btn arrow1 left" aria-hidden="true" id="left"></button>
@@ -96,7 +96,6 @@
     </div>
 <script>
      var mid = "<%orgId%>";
-     var tid = "<%threadId%>";
 
 <¤pages/main.js¤>
 

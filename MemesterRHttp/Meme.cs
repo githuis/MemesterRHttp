@@ -19,9 +19,9 @@ namespace MemesterRHttp
         [Ignore]
         public string WebPath => $"/memes/{OrgId}.webm";
         [Ignore]
-        public string Thumb => System.IO.Path.Combine("public", "thumbs", $"{OrgId}.png");
+        public string Thumb => System.IO.Path.Combine("public", "thumbs", $"{OrgId}.jpg");
         [Ignore]
-        public string WebThumb => $"/thumbs/{OrgId}.png";
+        public string WebThumb => $"/thumbs/{OrgId}.jpg";
 
 
         public void Vote(int vote)

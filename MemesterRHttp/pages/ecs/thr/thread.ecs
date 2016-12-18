@@ -18,9 +18,8 @@
     <div id="content">
         <div id="thread-title"><%threadname%></div>
     </div>
-    <template id="template"><div class="meme"><img src="http://lorempixel.com/180/180/" alt="meme"></div></template>
+    <template id="template"><div class="meme"><a><img src="//:0" alt="meme"/></a></div></template>
     <script>
-        var tId = "<% thread %>";
         var threads = <% memes %>;
 <¤ pages/thr/thread.js ¤>
     </script>

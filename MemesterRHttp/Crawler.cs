@@ -39,27 +39,27 @@ namespace MemesterRHttp
         {
             while (true)
             {
-                try
-                {
-                    Console.WriteLine("Started downloading");
-                    var memes = Crawl();
-                    Parallel.ForEach(memes, CheckIfExists);
-                    Console.WriteLine("Done downloading for now");
-                    await Task.Delay(_interval);
-                }
-                catch (Exception)
-                {
-                    await Task.Delay(TimeSpan.FromMinutes(10));
-                }
+                Console.WriteLine("Started downloading");
+                var memes = Crawl();
+                Parallel.ForEach(memes, CheckIfExists);
+                Console.WriteLine("Done downloading for now");
+                await Task.Delay(_interval);
             }
         }
         
         private void CheckIfExists(CMeme cmeme)
         {
             if (_dict.Contains(cmeme) || cmeme.Url.EndsWith("gif")) return;
-            var meme = DownloadMeme(cmeme);
-            _dict.Add(meme);
-            _db.Insert(meme);
+            try
+            {
+                var meme = DownloadMeme(cmeme);
+                _dict.Add(meme);
+                _db.Insert(meme);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
 
@@ -122,7 +122,7 @@ namespace MemesterRHttp
 
         private static void CreateThumb(Meme meme)
         {
-            FFMPEG.ExecuteAsync($"-hide_banner -loglevel panic -i {meme.Path} -vf scale=-1:180 -ss 00:00:00.9 -f image2 -vframes 1 {meme.Thumb} -y");
+            FFMPEG.ExecuteAsync($"-hide_banner -loglevel panic -ss 00:00:00.9 -i {meme.Path} -vf scale=-1:160 -q:v 10 -f image2 -vframes 1 {meme.Thumb} -y");
         }
     }
 }
