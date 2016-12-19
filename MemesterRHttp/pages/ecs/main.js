@@ -101,11 +101,10 @@
 
         function isLoggedin() {
             var ss = sessionStorage.getItem("usr");
-            if (!(ss == null || ss == "null" || ss == ""))
+            if (ss == null || ss == "null" || ss == "")
                 return false;
             ss = sessionStorage.getItem("pwd");
-            return ss == null || ss == "null" || ss == "";
-
+            return ss != null && ss != "null" && ss != "";
         }
 
         function login() {

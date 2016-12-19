@@ -1,5 +1,6 @@
         var $status = $('#status');
         var $submit = $("#submit");
+        var usernameRegex = /^[a-zA-Z0-9]+$/;
 
         String.prototype.hashCode = function() {
             var hash = 0;
@@ -62,8 +63,7 @@
                 $status.text("Passwords do not match");
                 return false;
             }
-            var usernameRegex = /^[a-zA-Z0-9]+$/;
-            if (!validateName(usernameRegex.test(name))){
+            if (!usernameRegex.test(name)){
                 $status.text("Username contains invalid characters");
                 return false;
             }
