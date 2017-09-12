@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
+    <meta charset="UTF-8">
+    <!--<link rel="stylesheet" href="icons.css">-->
+    <!--<link rel="stylesheet" href="style.css">-->
+    <style>
+<¤pages/style.css¤>
+<¤pages/icons.css¤>
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
+    <title>Memester.club</title>
+    <style>
+
+    </style>
+    <meta property="og:title" content="<%title%> - Memester" />
+    <meta property="og:type" content="video/webm" />
+    <meta property="og:url" content=document.URL />
+    <meta property="og:image" content="<%thumb%>" />
+
+</head>
+<body>
+    <div id="container">
+        <header>
+            <div class="no-sel">
+                <div onclick="window.location='/';" class="no-sel header-bar">Memester.club</div>
+            </div>
+        </header>
+        <main>
+            <header style="text-align: center">404 meme not found
+                <button class="hover-btn arrow1 right" aria-hidden="true" id="right"></button>
+            </header>
+            <div id="videoDiv">
+                <video src="http://memester.jbaagaard.com/img/404.mp4" autoplay="autoplay" loop="loop">
+                    It is 2016 and your browser's still not down with a little webm
+                </video>
+            </div>
+            <footer class="player-controls">
+            </footer>
+        </main>
+    </div>
+<script>
+    <¤pages/main.js¤>
+</script>
+</body>
+</html>

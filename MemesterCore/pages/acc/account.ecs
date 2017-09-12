@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<link rel="stylesheet" href="account.css">-->
+    <style><¤pages/acc/account.css¤></style>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200|Comfortaa:300" rel="stylesheet">
+    <title>User page - Memester</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div onclick="window.location='/';" class="no-sel">Memester.club</div>
+    </header>
+</div>
+
+    <div id="username">username</div>
+
+    <ul>
+        <li>Memes consumed: 34534</li>
+        <li>Life wasted: 3 hours</li>
+        <li>Memes liked: 12</li>
+        <li>Times Obama won the election: 2</li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+    <div id="usermemes">
+
+    </div>
+    <template id="template"><div class="meme"><img src="http://lorempixel.com/180/180/" alt="meme"></div></template>
+
+    <script>
+        <¤pages/acc/acount.js¤>
+    </script>
+</body>
+</html>

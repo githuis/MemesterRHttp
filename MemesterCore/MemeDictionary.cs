@@ -1,15 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace MemesterRHttp
+namespace MemesterCore
 {
     class MemeDictionary : IEnumerable<Meme>
     {
         private readonly ConcurrentDictionary<long, Meme> _dict = new ConcurrentDictionary<long, Meme>();
         private readonly List<Meme> _list = new List<Meme>();
-        private readonly object _lock = new object();
 
         public void Add(Meme meme)
         {

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemesterRHttp", "MemesterRHttp\MemesterRHttp.csproj", "{EFFFB8D1-7457-4840-9EB4-EF10362C101E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemesterCore", "MemesterCore\MemesterCore.csproj", "{C50A43A9-3577-44F8-BEDF-F067109F2108}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{EFFFB8D1-7457-4840-9EB4-EF10362C101E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFFFB8D1-7457-4840-9EB4-EF10362C101E}.Release|x64.ActiveCfg = Release|x64
 		{EFFFB8D1-7457-4840-9EB4-EF10362C101E}.Release|x64.Build.0 = Release|x64
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Debug|x64.Build.0 = Debug|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Release|x64.ActiveCfg = Release|Any CPU
+		{C50A43A9-3577-44F8-BEDF-F067109F2108}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

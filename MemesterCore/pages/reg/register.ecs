@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Memester.Club</title>
+    <!--<link rel="stylesheet" href="register.css">-->
+    <style>
+        <¤pages/reg/register.css¤>
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <div onclick="window.location='/';" class="no-sel">Memester.club</div>
+        </div>
+    </header>
+    <div>
+        <div class="info">
+            <div class="fa fa-user"></div><br>
+            <div class="fa fa-key"></div><br>
+            <div class="fa fa-key"></div><br>
+        </div>
+        <div class="form">
+            <input type="text" id="usr"><br>
+            <input type="password" id="pwd1"><br>
+            <input type="password" id="pwd2"><br>
+            <button id="submit">Register</button><br>
+            <div id="status"></div><br><br><br>
+            This is a sily website, don't use a serious password.<br>
+            We won't protect it that much anyways
+        </div>
+    </div>
+</div>
+<!--<script src="register.js"></script>-->
+    <script>
+<¤pages/reg/register.js¤>
+    </script>
+</body>
+</html>

@@ -1,71 +1,55 @@
-﻿using LiteDB;
-using RedHttpServerNet45;
-using RedHttpServerNet45.Response;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
+using LiteDB;
+using RedHttpServerCore;
+using RedHttpServerCore.Plugins;
+using RedHttpServerCore.Plugins.Interfaces;
+using RedHttpServerCore.Response;
 
-namespace MemesterRHttp
+namespace MemesterCore
 {
     class Program
     {
-        private static readonly object ReportLock = new object();
-
         static void Main(string[] args)
         {
-            var server = new RedHttpServer(3000, "./public");
+            var server = new RedHttpServer(3000);
             var mdb = new LiteDatabase("memes.ldb").GetCollection<Meme>("Memes");
             var udb = new LiteDatabase("users.ldb").GetCollection<User>("Users");
+            var rdb = new LiteDatabase("report.ldb").GetCollection<Report>("Reports");
 
-
-
-            //var db = new SimpleSQLiteDatatase("db.sqlite");
-            //db.CreateTable<Meme>();
-            //db.CreateTable<User>();
-            //db.CreateTable<Report>();
+            
             var dict = LoadMemes(mdb.FindAll());
             var delMan = new DeleteManager(dict, mdb, 12);
-            var crawler = new Crawler(mdb, delMan, TimeSpan.FromMinutes(5));
-            var rand = new FastRandom();
+            var crawler = new Crawler(mdb, delMan, dict, TimeSpan.FromMinutes(5));
+            var rand = new Random();
 
-            server.Get("/", (req, res) =>
+            server.Get("/", async (req, res) =>
             {
                 var m = rand.Next(0, dict.Length - 1);
                 var meme = dict[m];
-                res.Redirect("/meme/" + meme.OrgId);
+                await res.Redirect("/meme/" + meme.OrgId);
             });
 
-            server.Get("/*", (req, res) =>
+
+            server.Get("/404", async (req, res) =>
             {
-                res.Redirect("/404");
+                await res.RenderPage("pages/404.ecs", null);
             });
-
-            server.Get("/404", (req, res) =>
-            {
-                res.RenderPage("pages/404.ecs", null);
-            });
-
-            server.Get("/instameme", (req, res) =>
-            {
-                var m = rand.Next(0, dict.Length);
-                var meme = dict[m];
-                res.SendFile(meme.WebPath);
-            });
-
-            server.Get("/user/:user", (req, res) =>
+            
+            server.Get("/user/:user", async (req, res) =>
             {
                 var par = new RenderParams
                 {
                     {"total", dict.Length}
                 };
-                res.RenderPage("pages/acc/account.ecs", par);
+                await res.RenderPage("pages/acc/account.ecs", par);
             });
 
-            server.Get("/user/:user/liked", (req, res) =>
+            server.Get("/user/:user/liked", async (req, res) =>
             {
                 var user = req.Params["user"];
                 var items = req.Queries["p"];
@@ -74,27 +58,27 @@ namespace MemesterRHttp
                 int i;
                 if (u == null || !int.TryParse(items, out i))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
-                var liked = u.Votes.Keys.Skip((i - 1)*20).Take(20);
-                res.SendJson(liked);
+                var liked = u.Votes.Keys.Skip((i - 1) * 20).Take(20);
+                await res.SendJson(liked);
             });
 
-            server.Get("/meme/:meme", (req, res) =>
+            server.Get("/meme/:meme", async (req, res) =>
             {
                 var memeid = req.Params["meme"];
                 long mm = 0;
                 if (!long.TryParse(memeid, out mm))
                 {
-                    res.Redirect("/404");
+                    await res.Redirect("/404");
                     return;
                 }
                 Meme meme;
                 if (!dict.TryGetValue(mm, out meme))
                 {
-                    res.Redirect("/404");
+                    await res.Redirect("/404");
                     return;
                 }
                 var rp = new RenderParams
@@ -107,49 +91,49 @@ namespace MemesterRHttp
                     {"orgId", meme.OrgId},
                     {"total", dict.Length}
                 };
-                res.RenderPage("pages/index.ecs", rp);
+                await res.RenderPage("pages/index.ecs", rp);
             });
 
-            server.Post("/meme/:meme/vote", (req, res) =>
+            server.Post("/meme/:meme/vote", async (req, res) =>
             {
-                var pq = req.GetFormData();
-                var u = pq["user"];
-                var p = pq["pass"];
+                var pq = await req.GetFormDataAsync();
+                var u = pq["user"][0];
+                var p = pq["pass"][0];
                 var m = req.Params["meme"];
-                var v = pq["val"];
+                var v = pq["val"][0];
                 int val;
 
                 if (string.IsNullOrWhiteSpace(u) || string.IsNullOrWhiteSpace(m) || string.IsNullOrWhiteSpace(v) ||
                     string.IsNullOrWhiteSpace(p))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
                 if (!int.TryParse(v, out val) || val < -1 || val > 1)
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
                 long mm = 0;
                 if (!long.TryParse(m, out mm))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
                 Meme meme;
                 if (!dict.TryGetValue(mm, out meme))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
-                var user = mdb.Get<User>(u);
+                var user = udb.FindById(u);
                 if (user == null || user.PassHash != p)
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
@@ -157,21 +141,21 @@ namespace MemesterRHttp
                 meme.Vote(user.Votes.TryGetValue(m, out cv) ? CalcVote(cv, val) : val);
                 user.Votes[m] = val;
                 mdb.Update(meme);
-                mdb.Update(user);
-                res.SendString("ok");
+                udb.Update(user);
+                await res.SendString("ok");
             });
 
-            server.Post("/meme/:meme/report", (req, res) =>
+            server.Post("/meme/:meme/report", async (req, res) =>
             {
                 var m = req.Params["meme"];
-                var body = req.GetBodyPostFormData();
-                var rn = body["rn"];
-                var reason = body["reason"];
-                var email = body["email"];
+                var body = await req.GetFormDataAsync();
+                var rn = body["rn"][0];
+                var reason = body["reason"][0];
+                var email = body["email"][0];
 
                 if (string.IsNullOrWhiteSpace(rn) || ((rn == "2" || rn == "4") && string.IsNullOrWhiteSpace(reason)))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
@@ -180,30 +164,25 @@ namespace MemesterRHttp
                 int rval;
                 if (!int.TryParse(rn, out rval) || rval < 0 || rval > 4)
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
                 long mm = 0;
                 if (!long.TryParse(m, out mm))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
                 Meme meme;
                 if (!dict.TryGetValue(mm, out meme))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
-                var rr = (Report.ReportReason) rval;
-                // will do for now
-                lock (ReportLock)
-                {
-                    File.AppendAllText("reported.txt", $"{m}\t\t{email}\t\t{rr}\t\t{reason}\n");
-                }
-                mdb.Insert(new Report(m, rr, email, reason));
-                res.SendString("ok");
+                var rr = (Report.ReportReason)rval;
+                rdb.Insert(new Report(m, rr, email, reason));
+                await res.SendString("ok");
             });
 
             server.Get("/meme/:meme/remove", async (req, res) =>
@@ -214,7 +193,7 @@ namespace MemesterRHttp
                 long mm = 0;
                 if (!long.TryParse(m, out mm))
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
 
@@ -223,28 +202,28 @@ namespace MemesterRHttp
                 {
                     var r = rand.Next(750, 3000);
                     await Task.Delay(r);
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
                 await Task.Delay(500);
-                mdb.Delete<Meme>(meme.OrgId);
+                mdb.Delete(meme.OrgId);
                 dict.Remove(meme);
                 File.Delete(meme.Path);
                 File.Delete(meme.Thumb);
-                res.Redirect("/");
+                await res.Redirect("/");
             });
 
-            server.Get("/thread/:thread", (req, res) =>
+            server.Get("/thread/:thread", async (req, res) =>
             {
                 var tid = req.Params["thread"];
                 int t = 0;
                 if (!int.TryParse(tid, out t))
                 {
-                    res.Redirect("/404");
+                    await res.Redirect("/404");
                     return;
                 }
-                var th = mdb.FindOne<Meme>(m => m.ThreadId == t);
-                var memes = mdb.Find<Meme>(m => m.ThreadId == t).Select(m => m.OrgId);
+                var th = mdb.FindOne(m => m.ThreadId == t);
+                var memes = mdb.Find(m => m.ThreadId == t).Select(m => m.OrgId);
 
                 var pars = new RenderParams
                 {
@@ -252,28 +231,28 @@ namespace MemesterRHttp
                     {"threadname", th.ThreadName},
                     {"memes", memes}
                 };
-                res.RenderPage("pages/thr/thread.ecs", pars);
+                await res.RenderPage("pages/thr/thread.ecs", pars);
             });
-            
+
             server.Post("/reportedmemes", async (req, res) =>
             {
-                var body = req.GetBodyPostFormData();
-                var pass = body["pwd"];
+                var body = await req.GetFormDataAsync();
+                var pass = body["pwd"][0];
                 var pwd = File.ReadAllText("rmpwd");
                 if (pass != pwd)
                 {
                     var r = rand.Next(750, 1500);
                     await Task.Delay(r);
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
-                var reports = mdb.GetTable<Report>().ToList();
-                res.SendJson(reports);
+                var reports = mdb.FindAll().ToList();
+                await res.SendJson(reports);
             });
 
-            server.Get("/multimeme", (req, res) =>
+            server.Get("/multimeme", async (req, res) =>
             {
-                var size = req.Queries["size"];
+                var size = req.Queries["size"][0];
                 if (string.IsNullOrEmpty(size) || !Regex.IsMatch(size, "[0-9]+x[0-9]+", RegexOptions.Compiled))
                     size = "3x3";
                 var split = size.Split('x');
@@ -281,8 +260,8 @@ namespace MemesterRHttp
                 var w = int.Parse(split[1]);
                 if (h > 4) h = 4;
                 if (w > 5) w = 5;
-                var tot = h*w;
-                var limit = tot*3;
+                var tot = h * w;
+                var limit = tot * 3;
                 var l = dict.Length;
                 if (limit > l) limit = l;
                 var r = new Random();
@@ -292,7 +271,7 @@ namespace MemesterRHttp
                     list.Add(dict[r.Next(0, l)]);
                 }
 
-                res.RenderPage("./pages/multimeme.ecs", new RenderParams
+                await res.RenderPage("./pages/multimeme.ecs", new RenderParams
                 {
                     {"h", h},
                     {"w", w},
@@ -300,9 +279,9 @@ namespace MemesterRHttp
                 });
             });
 
-            server.Post("/login", (req, res) =>
+            server.Post("/login", async (req, res) =>
             {
-                var login = req.GetBodyPostFormData();
+                var login = await req.GetFormDataAsync();
                 var uid = login["usr"];
                 var pwd = login["pwd"];
                 if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(pwd))
@@ -311,49 +290,53 @@ namespace MemesterRHttp
                     return;
                 }
 
-                var user = mdb.FindOne<User>(u => u.Username == uid);
+                var user = udb.FindOne(u => u.Username == uid);
                 if (user == null || user.PassHash != pwd)
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
-                res.SendString("ok");
+                await res.SendString("ok");
             });
 
-            server.Get("/register", (req, res) =>
+            server.Get("/register", async (req, res) =>
             {
-                res.RenderPage("pages/reg/register.ecs", null);
+                await res.RenderPage("pages/reg/register.ecs", null);
             });
 
-            server.Post("/register", (req, res) =>
+            server.Post("/register", async (req, res) =>
             {
-                var data = req.GetBodyPostFormData();
-                var un = data["username"];
-                var pw = data["password"];
+                var data = await req.GetFormDataAsync();
+                var un = data["username"][0];
+                var pw = data["password"][0];
                 if (un != null || pw != null)
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
-                var user = mdb.FindOne<User>(u => u.Username == un);
+                var user = udb.FindOne(u => u.Username == un);
                 if (user != null)
                 {
-                    res.SendString("no");
+                    await res.SendString("no");
                     return;
                 }
                 user = new User
                 {
                     Username = un,
-                    PassHash = data["password"]
+                    PassHash = data["password"][0]
                 };
-                mdb.Insert(user);
-                res.SendString("ok");
+                udb.Insert(user);
+                await res.SendString("ok");
             });
 
+            server.Get("/*", async (req, res) =>
+            {
+                await res.Redirect("/404");
+            });
             crawler.Start();
-
-            Logger.Configure(LoggingOption.File, true, "LOG.txt");
+            server.Plugins.Register<ILogging, FileLogging>(new FileLogging("LOG"));
             server.Start();
+            Console.ReadKey();
         }
 
         private static MemeDictionary LoadMemes(IEnumerable<Meme> memes)
@@ -400,6 +383,5 @@ namespace MemesterRHttp
             }
             return 0;
         }
-
     }
 }

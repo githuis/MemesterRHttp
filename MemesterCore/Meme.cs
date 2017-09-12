@@ -1,7 +1,7 @@
 ﻿using System;
 using LiteDB;
 
-namespace MemesterRHttp
+namespace MemesterCore
 {
     class Meme
     {
@@ -16,7 +16,7 @@ namespace MemesterRHttp
         public long ThreadId { get; set; }
         public string ThreadName { get; set; }
         public int Score { get; private set; }
-        public DateTime Downloaded { get; }
+        public DateTime Downloaded { get; set; }
         
 
         [BsonIgnore]
