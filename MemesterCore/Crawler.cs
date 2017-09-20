@@ -46,7 +46,7 @@ namespace MemesterCore
                 var memes = await Crawl();
                 memes = memes.Where(MemeFilter).ToList();
                 _deleteManager.MakeRoom(memes.Count);
-                Parallel.ForEach(memes, async (m) => await Download(m));
+                Parallel.ForEach(memes, async m => await Download(m));
                 Console.WriteLine("Done downloading for now");
                 await Task.Delay(_interval);
             }
@@ -109,31 +109,37 @@ namespace MemesterCore
             var list = new List<CMeme>();
             var html = await DownloadHtml();
             var doc = new HtmlDocument();
-            doc.LoadHtml(html);
-            IEnumerable<HtmlNode> threads = doc.DocumentNode.QuerySelectorAll("div.thread");
-            if (threads == null) return list;
-            threads = threads.Skip(1);
-            foreach (var node in threads)
+            try
             {
-                var split = node.QuerySelector("a.replylink").Attributes["href"].Value.Substring(7).Split('/');
-                var tid = split[0];
-                var name = split[1];
-                var files = node.QuerySelectorAll("div.file");
-                foreach (var htmlNode in files)
+                doc.LoadHtml(html);
+                IEnumerable<HtmlNode> threads = doc.DocumentNode.QuerySelectorAll("div.thread");
+                if (threads == null) return list;
+                threads = threads.Skip(1);
+                foreach (var node in threads)
                 {
-                    var tit = htmlNode.QuerySelector("a").InnerText;
-                    if (tit.Contains("(...)")) tit = htmlNode.QuerySelector("a").Attributes["title"].Value;
-                    var href = htmlNode.QuerySelector("a.fileThumb").Attributes["href"].Value;
-                    if (href.EndsWith(".gif")) continue;
-                    list.Add(new CMeme
+                    var split = node.QuerySelector("a.replylink").Attributes["href"].Value.Substring(7).Split('/');
+                    var tid = split[0];
+                    var name = split[1];
+                    var files = node.QuerySelectorAll("div.file");
+                    foreach (var htmlNode in files)
                     {
-                        Thread = WebUtility.HtmlDecode(name).Replace("(...)", ""),
-                        ThreadId = long.Parse(tid),
-                        Title = WebUtility.HtmlDecode(tit).Replace(".webm", ""),
-                        Url = "http:" + href,
-                        OrgId = long.Parse(href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", "")),
-                    });
+                        var tit = htmlNode.QuerySelector("a").InnerText;
+                        if (tit.Contains("(...)")) tit = htmlNode.QuerySelector("a").Attributes["title"].Value;
+                        var href = htmlNode.QuerySelector("a.fileThumb").Attributes["href"].Value;
+                        if (href.EndsWith(".gif")) continue;
+                        list.Add(new CMeme
+                        {
+                            Thread = WebUtility.HtmlDecode(name).Replace("(...)", ""),
+                            ThreadId = long.Parse(tid),
+                            Title = WebUtility.HtmlDecode(tit).Replace(".webm", ""),
+                            Url = "http:" + href,
+                            OrgId = long.Parse(href.Substring(href.LastIndexOf("/") + 1).Replace(".webm", "")),
+                        });
+                    }
                 }
+            }
+            catch (Exception e)
+            {
             }
             return list;
         }
